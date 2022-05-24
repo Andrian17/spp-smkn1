@@ -15,10 +15,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $student = Student::first();
-        $alamat = $student->alamat;
-        // dd($alamat);
-        return view('student.studentDetail', ['student' => $student, 'alamat' => $alamat[0]]);
+        return view('student.studentDetail', ['student' => Student::where('user_id', auth()->user()->id)->first()]);
     }
 
     /**

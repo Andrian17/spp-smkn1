@@ -19,6 +19,10 @@ class Student extends Model
         'foto'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

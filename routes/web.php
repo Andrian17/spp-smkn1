@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,16 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('student.studentContainer');
-});
+Route::get('/login', [LoginController::class, 'index'])->middleware('guest');
+Route::post('/login', [LoginController::class, 'authtenticate']);
+//Logout
+Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth');
 
-Route::get('/siswa/profile', function () {
-    return view('student.studentDetail');
-});
-
-Route::resource('/siswa', StudentController::class);
-
-Route::get('/login', function () {
-    return view('login');
-});
+Route::resource('/siswa',  StudentController::class);
