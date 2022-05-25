@@ -1,5 +1,5 @@
 @extends('student.template.studentContainer')
-@section('title', 'Student Content')
+@section('title', $title)
 @section('content')
     <div class="container">
         <div class="row">
@@ -39,19 +39,19 @@
                                 <td>:</td>
                                 <td>{{$student->no_hp}}</td>
                             </tr>
-                          {{-- <tr>
+                          <tr>
                               <td colspan="3">Alamat</td>
                           </tr>
                           <tr>
                             <td>Provinsi - Kota</td>
                             <td>:</td>
-                            <td>{{$alamat->provinsi ? $alamat->provinsi : ""}} - {{$alamat->kota ? $alamat->kota : ""}} </td>
+                            <td>{{ $alamat->provinsi }} - {{ $alamat->kota }} </td>
                           </tr>
                           <tr>
                             <td>Alamat Lengkap</td>
                             <td>:</td>
-                            <td>{{ $alamat->alamat ? $alamat->alamat : "" }}</td>
-                          </tr> --}}
+                            <td>{{ $alamat->alamat }}</td>
+                          </tr>
                         </tbody>
                       </table>
                       <div class="card flex-grow-1" style="width: 18rem;">
@@ -63,7 +63,6 @@
                         </div>
                       </div>
                 </div>
-
             </div>
         </div>
     </div>

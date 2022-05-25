@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\payment;
 use App\Http\Requests\StorepaymentRequest;
 use App\Http\Requests\UpdatepaymentRequest;
+use App\Models\Student;
 
 class PaymentController extends Controller
 {
@@ -15,7 +16,11 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        $student =  Student::where('user_id', auth()->user()->id)->with('major')->with('kelas')->first();
+        // dd($student);
+        $payment =  payment::where('student_id', $student->id)->get();
+        // dd($payment);
+        return view('student.paymentDetail', ['payments' => $payment, 'student' => $student, 'title' => 'Data Pembayaran']);
     }
 
     /**

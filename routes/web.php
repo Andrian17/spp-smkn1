@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,4 @@ Route::post('/login', [LoginController::class, 'authtenticate']);
 Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth');
 
 Route::resource('/siswa',  StudentController::class);
+Route::get('/pembayaran',  [PaymentController::class, 'index'])->middleware('auth');
