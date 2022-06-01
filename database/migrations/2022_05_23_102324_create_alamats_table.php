@@ -15,7 +15,7 @@ class CreateAlamatsTable extends Migration
     {
         Schema::create('alamats', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id');
+            $table->foreignId('siswa_id');
             $table->string('provinsi');
             $table->string('kota');
             $table->string('alamat');

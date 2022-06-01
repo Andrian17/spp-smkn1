@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'midtrans' => [
+        'server' => env('MD_SERVERKEY'),
+        'client' => env('MD_CLIENTKEY')
+    ]
+
 ];

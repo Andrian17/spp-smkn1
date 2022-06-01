@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'nominal_pembayaran',
         'pembayaran_uts',
@@ -15,8 +16,32 @@ class Payment extends Model
         'status_pembayaran'
     ];
 
-    public function student()
+    public function setStatusPending()
     {
-        return $this->belongsTo(Student::class);
+        $this->attributes['status_pembayaran'] = 'pending';
+        self::save();
+    }
+
+    public function setStatusSuccess()
+    {
+        $this->attributes['status_pembayaran'] = 'success';
+        self::save();
+    }
+
+    public function setStatusFailed()
+    {
+        $this->attributes['status_pembayaran'] = 'failed';
+        self::save();
+    }
+
+    public function setStatusExpired()
+    {
+        $this->attributes['status_pembayaran'] = 'expired';
+        self::save();
+    }
+
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class);
     }
 }

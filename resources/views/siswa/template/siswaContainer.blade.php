@@ -1,4 +1,4 @@
-@extends('student.template.main')
+@extends('siswa.template.main')
 @section('container')
 
 <div class="container-fluid">
@@ -34,7 +34,7 @@
           </h6>
           <ul class="nav flex-column mb-2">
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="/pembayaran/create">
                 <span data-feather="file-text"></span>
                 SPP
               </a>

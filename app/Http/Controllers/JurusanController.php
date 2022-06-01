@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Major;
-use App\Http\Requests\StoreMajorRequest;
-use App\Http\Requests\UpdateMajorRequest;
+use App\Models\Jurusan;
+use App\Http\Requests\StoreJurusanRequest;
+use App\Http\Requests\UpdateJurusanRequest;
 
-class MajorController extends Controller
+class JurusanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class MajorController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreMajorRequest  $request
+     * @param  \App\Http\Requests\StoreJurusanRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreMajorRequest $request)
+    public function store(StoreJurusanRequest $request)
     {
         //
     }
@@ -42,10 +42,10 @@ class MajorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Major  $major
+     * @param  \App\Models\Jurusan  $jurusan
      * @return \Illuminate\Http\Response
      */
-    public function show(Major $major)
+    public function show(Jurusan $jurusan)
     {
         //
     }
@@ -53,10 +53,10 @@ class MajorController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Major  $major
+     * @param  \App\Models\Jurusan  $jurusan
      * @return \Illuminate\Http\Response
      */
-    public function edit(Major $major)
+    public function edit(Jurusan $jurusan)
     {
         //
     }
@@ -64,11 +64,11 @@ class MajorController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateMajorRequest  $request
-     * @param  \App\Models\Major  $major
+     * @param  \App\Http\Requests\UpdateJurusanRequest  $request
+     * @param  \App\Models\Jurusan  $jurusan
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateMajorRequest $request, Major $major)
+    public function update(UpdateJurusanRequest $request, Jurusan $jurusan)
     {
         //
     }
@@ -76,10 +76,10 @@ class MajorController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Major  $major
+     * @param  \App\Models\Jurusan  $jurusan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Major $major)
+    public function destroy(Jurusan $jurusan)
     {
         //
     }

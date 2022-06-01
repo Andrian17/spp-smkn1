@@ -1,4 +1,4 @@
-@extends('student.template.studentContainer')
+@extends('siswa.template.siswaContainer')
 @section('title', $title)
 @section('content')
     <div class="container">
@@ -12,25 +12,25 @@
                             <tr>
                                 <td>NAMA</td>
                                 <td>:</td>
-                                <td>{{ $student->nama }}</td>
+                                <td>{{ $siswa->nama }}</td>
                             </tr>
                             <tr>
                                 <td>P/L</td>
                                 <td>:</td>
-                                <td>{{ $student->jenis_kelamin }}</td>
+                                <td>{{ $siswa->jenis_kelamin }}</td>
                             </tr>
                             <tr>
                                 <td>Jurusan</td>
                                 <td>:</td>
-                                <td>{{ $student->major->jurusan }}</td>
+                                <td>{{ $siswa->jurusan->jurusan }}</td>
                             </tr>
                             <tr>
                                 <td>Kelas</td>
                                 <td>:</td>
-                                <td>{{ $student->kelas->kelas }}</td>
+                                <td>{{ $siswa->kelas->kelas }}</td>
                             </tr>
 
-                            @foreach ($payments as $payment)
+                            @foreach ($siswa->payments as $payment)
                             <tr>
                               <td scope="row">Pembayaran</td>
                               <td>:</td>
@@ -45,6 +45,7 @@
                                 @else
                                     <span class="badge bg-warning text-dark">Belum Lunas</span>
                                 @endif
+                                <button id="btnBayar" class="btn btn-primary">bayar</button>
                               </td>
                             </tr>
                             <tr>
@@ -61,6 +62,31 @@
                             @endforeach
                         </tbody>
                       </table>
+                     {{-- {{ dd($token) }} --}}
+                      <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client') }}">
+                      </script>
+                      <script>
+                        document.getElementById('btnBayar').addEventListener('click', function () {
+                          // SnapToken acquired from previous step
+                          snap.pay('{{ $token }}', {
+                            // Optional
+                            onSuccess: function (result) {
+                              /* You may add your own js here, this is just example */
+                              window.location.href = "{{ url('/siswa') }}";
+                            },
+                            // Optional
+                            onPending: function (result) {
+                              /* You may add your own js here, this is just example */
+                              window.location.href = "{{ url('/siswa') }}";
+                            },
+                            // Optional
+                            onError: function (result) {
+                              /* You may add your own js here, this is just example */
+                              window.location.href = "{{ url('/siswa') }}";
+                            }
+                          });
+                        });
+                      </script>
                 </div>
 
             </div>

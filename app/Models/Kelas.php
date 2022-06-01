@@ -13,13 +13,13 @@ class Kelas extends Model
         'kelas'
     ];
 
-    public function student()
+    public function siswa()
     {
-        $this->hasMany(Student::class);
+        $this->hasMany(Siswa::class);
     }
 
-    public function major()
+    public function jurusan()
     {
-        $this->belongsTo(Major::class);
+        $this->belongsTo(Jurusan::class);
     }
 }

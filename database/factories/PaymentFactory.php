@@ -14,11 +14,10 @@ class PaymentFactory extends Factory
     public function definition()
     {
         return [
-            'student_id' => $this->faker->numberBetween(1, 4),
+            'siswa_id' => $this->faker->numberBetween(1, 4),
             'nominal_pembayaran' => $this->faker->numberBetween(0, 1000000),
             'pembayaran_uts' => $this->faker->boolean,
             'pembayaran_uas' => $this->faker->boolean,
-            'status_pembayaran' => $this->faker->boolean,
         ];
     }
 }

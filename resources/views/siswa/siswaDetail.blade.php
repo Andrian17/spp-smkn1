@@ -1,4 +1,4 @@
-@extends('student.template.studentContainer')
+@extends('siswa.template.siswaContainer')
 @section('title', $title)
 @section('content')
     <div class="container">
@@ -9,35 +9,35 @@
                 <div class="jumbotron d-flex flex-row">
                     <table class="table flex-grow-1" >
                         <tbody>
-                          <tr>
-                            <td scope="row">NIS</td>
-                            <td>:</td>
-                            <td>{{ $student->nis }}</td>
+                            <tr>
+                                <td scope="row">NIS</td>
+                                <td>:</td>
+                                <td>{{ $siswa->nis }}</td>
                           </tr>
                           <tr>
                               <td>Nama</td>
                               <td>:</td>
-                              <td>{{$student->nama}}</td>
+                              <td>{{ $siswa->nama }}</td>
                           </tr>
                           <tr>
                               <td>Tanggal Lahir</td>
                               <td>:</td>
-                              <td>{{$student->tanggal_lahir}}</td>
+                              <td>{{ $siswa->tanggal_lahir }}</td>
                           </tr>
                             <tr>
                                 <td>Jenis Kelamin</td>
                                 <td>:</td>
-                                <td>{{$student->jenis_kelamin}}</td>
+                                <td>{{ $siswa->jenis_kelamin }}</td>
                             </tr>
                             <tr>
                                 <td>Agama</td>
                                 <td>:</td>
-                                <td>{{$student->agama}}</td>
+                                <td>{{ $siswa->agama }}</td>
                             </tr>
                             <tr>
                                 <td>No. Telepon</td>
                                 <td>:</td>
-                                <td>{{$student->no_hp}}</td>
+                                <td>{{$siswa->no_hp}}</td>
                             </tr>
                           <tr>
                               <td colspan="3">Alamat</td>
@@ -45,19 +45,19 @@
                           <tr>
                             <td>Provinsi - Kota</td>
                             <td>:</td>
-                            <td>{{ $alamat->provinsi }} - {{ $alamat->kota }} </td>
+                            <td>{{ $siswa->alamat->provinsi }} - {{ $siswa->alamat->kota }} </td>
                           </tr>
                           <tr>
                             <td>Alamat Lengkap</td>
                             <td>:</td>
-                            <td>{{ $alamat->alamat }}</td>
+                            <td>{{ $siswa->alamat->alamat }}</td>
                           </tr>
                         </tbody>
                       </table>
                       <div class="card flex-grow-1" style="width: 18rem;">
-                        <img class="card-img-top" src="{{ $student->foto }}" alt="foto siswa">
+                        <img class="card-img-top" src="{{ $siswa->foto }}" alt="foto siswa">
                         <div class="card-body">
-                            <h5 class="card-title">Andrian</h5>
+                            <h5 class="card-title"> {{ $siswa->nama }} </h5>
                             <p class="card-text">ganti foto</p>
                             <a href="#" class="btn btn-primary">Go somewhere</a>
                         </div>
