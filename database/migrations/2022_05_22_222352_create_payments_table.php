@@ -16,11 +16,12 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('siswa_id');
+            $table->string('order_id');
             $table->bigInteger('nominal_pembayaran');
             $table->boolean('pembayaran_uts');
             $table->boolean('pembayaran_uas');
-            $table->string("snap_token")->nullable();
             $table->enum('status_pembayaran', ['pending', 'success'])->default('pending');
+            $table->string("snap_token")->nullable();
             $table->timestamps();
         });
     }

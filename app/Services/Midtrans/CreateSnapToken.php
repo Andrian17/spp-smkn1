@@ -14,11 +14,11 @@ class CreateSnapToken extends Midtrans
         $this->data = $data;
     }
 
-    public function getSnapToken($data)
+    public function getSnapToken()
     {
         $params = [
             'transaction_details' => [
-                'order_id' => 'spp-' . $this->data->siswa_id,
+                'order_id' =>  $this->data->order_id,
                 'gross_amount' => $this->data->nominal_pembayaran,
             ],
             'item_details' => [
@@ -26,7 +26,7 @@ class CreateSnapToken extends Midtrans
                     'id' => 1, // primary key produk
                     'price' => $this->data->nominal_pembayaran, // harga satuan produk
                     'quantity' => 1, // kuantitas pembelian
-                    'name' => 'spp-' . $this->data->nama_siswa, // nama produk
+                    'name' => 'and-' . $this->data->nis, // nama produk
                 ],
             ],
             'customer_details' => [

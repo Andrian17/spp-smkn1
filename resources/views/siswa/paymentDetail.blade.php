@@ -62,27 +62,29 @@
                             @endforeach
                         </tbody>
                       </table>
-                     {{-- {{ dd($token) }} --}}
+                     {{-- {{ dd() }} --}}
                       <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client') }}">
                       </script>
                       <script>
-                        document.getElementById('btnBayar').addEventListener('click', function () {
+                        document.getElementById('btnBayar').addEventListener('click', function (event) {
+                            event.preventDefault();
                           // SnapToken acquired from previous step
                           snap.pay('{{ $token }}', {
                             // Optional
                             onSuccess: function (result) {
                               /* You may add your own js here, this is just example */
-                              window.location.href = "{{ url('/siswa') }}";
+                            //   location.reload();
+                            console.log(result);
                             },
                             // Optional
                             onPending: function (result) {
                               /* You may add your own js here, this is just example */
-                              window.location.href = "{{ url('/siswa') }}";
+                              console.log(result);
                             },
                             // Optional
                             onError: function (result) {
                               /* You may add your own js here, this is just example */
-                              window.location.href = "{{ url('/siswa') }}";
+                              console.log(result);
                             }
                           });
                         });

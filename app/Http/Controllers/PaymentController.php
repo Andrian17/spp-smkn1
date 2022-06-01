@@ -13,6 +13,21 @@ use function PHPUnit\Framework\isNull;
 class PaymentController extends Controller
 {
 
+    public function __construct()
+    {
+        // Config Midtrans
+
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('services.midtrans.server');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -22,16 +37,17 @@ class PaymentController extends Controller
     {
         $siswa = Siswa::where('user_id', auth()->user()->id)->with('jurusan')->with('kelas')->with('payments')->first();
         // dd($siswa->payments);
-        foreach ($siswa->payments as $payment) {
-            $payment["nama_siswa"] = $siswa->nama;
-            $payment["no_hp"] = $siswa->no_hp;
-            if (isNull($payment->snap_token)) {
-                // dd($payment);
-                $midtrans = new CreateSnapToken($payment);
-                $snapToken = $midtrans->getSnapToken($payment);
-                // $payment->snap_token = $snapToken;
-                Payment::where('id', $payment->id)->update(['snap_token' => $snapToken]);
-            }
+        $payment =  $siswa->payments[0];
+        $payment["nama_siswa"] = $siswa->nama;
+        $payment["no_hp"] = $siswa->no_hp;
+        $payment["nis"] = $siswa->nis;
+        // dd($payment);
+        if (!$payment->snap_token) {
+            // dd($payment);
+            $midtrans = new CreateSnapToken($payment);
+            $snapToken = $midtrans->getSnapToken();
+            // $payment->snap_token = $snapToken;
+            Payment::where('id', $payment->id)->update(['snap_token' => $snapToken]);
         }
         return view(
             'siswa.paymentDetail',
@@ -41,6 +57,51 @@ class PaymentController extends Controller
                 'title' => 'Data Pembayaran'
             ]
         );
+    }
+
+    public function notification(Request $request)
+    {
+
+        $repp = "KOKOKO";
+        return $repp;
+
+        $notif = new \Midtrans\Notification();
+        // dd($notif);
+
+        $transaction = $notif->transaction_status;
+        $fraud = $notif->fraud_status;
+
+        error_log("Order ID $notif->order_id: " . "transaction status = $transaction, fraud staus = $fraud");
+        $payment = Payment::where('order_id', $notif->order_id)->first();
+
+        if ($transaction == 'capture' || $transaction == 'settlement') {
+            if ($fraud == 'challenge') {
+                // TODO Set payment status in merchant's database to 'challenge'
+                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
+            } else if ($fraud == 'accept') {
+                // TODO Set payment status in merchant's database to 'success'
+                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "success"]);
+            }
+        } else if ($transaction == 'cancel') {
+            if ($fraud == 'challenge') {
+                // TODO Set payment status in merchant's database to 'failure'
+                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+            } else if ($fraud == 'accept') {
+                // TODO Set payment status in merchant's database to 'failure'
+                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+            }
+        } else if ($transaction == 'deny') {
+            // TODO Set payment status in merchant's database to 'failure'
+            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+        } else if ($transaction == 'pending') {
+            // TODO Set payment status in merchant's database to 'failure'
+            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pendind"]);
+        } else if ($transaction == 'expire') {
+            // TODO Set payment status in merchant's database to 'failure'
+            // $payment->setStatusExpired();
+            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "expired"]);
+        }
+        return;
     }
 
     /**

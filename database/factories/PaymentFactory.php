@@ -15,6 +15,7 @@ class PaymentFactory extends Factory
     {
         return [
             'siswa_id' => $this->faker->numberBetween(1, 4),
+            'order_id' => 'spp-' . uniqid(),
             'nominal_pembayaran' => $this->faker->numberBetween(0, 1000000),
             'pembayaran_uts' => $this->faker->boolean,
             'pembayaran_uas' => $this->faker->boolean,
