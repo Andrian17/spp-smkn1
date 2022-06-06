@@ -33,4 +33,14 @@ class Siswa extends Model
     {
         return $this->belongsTo(Jurusan::class);
     }
+
+    public function uasPayments()
+    {
+        return $this->hasMany(UasPayment::class);
+    }
+
+    public function utsPayments()
+    {
+        return $this->hasMany(UtsPayment::class);
+    }
 }

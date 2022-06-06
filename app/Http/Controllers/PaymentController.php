@@ -6,7 +6,10 @@ use App\Models\Payment;
 use App\Http\Requests\StorepaymentRequest;
 use App\Http\Requests\UpdatepaymentRequest;
 use App\Models\Siswa;
+use App\Models\UasPayment;
+use App\Models\UtsPayment;
 use App\Services\Midtrans\CreateSnapToken;
+use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
 
@@ -16,7 +19,6 @@ class PaymentController extends Controller
     public function __construct()
     {
         // Config Midtrans
-
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('services.midtrans.server');
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
@@ -27,7 +29,6 @@ class PaymentController extends Controller
         \Midtrans\Config::$is3ds = true;
     }
 
-
     /**
      * Display a listing of the resource.
      *
@@ -35,73 +36,59 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $siswa = Siswa::where('user_id', auth()->user()->id)->with('jurusan')->with('kelas')->with('payments')->first();
-        // dd($siswa->payments);
-        $payment =  $siswa->payments[0];
-        $payment["nama_siswa"] = $siswa->nama;
-        $payment["no_hp"] = $siswa->no_hp;
-        $payment["nis"] = $siswa->nis;
-        // dd($payment);
-        if (!$payment->snap_token) {
-            // dd($payment);
-            $midtrans = new CreateSnapToken($payment);
-            $snapToken = $midtrans->getSnapToken();
-            // $payment->snap_token = $snapToken;
-            Payment::where('id', $payment->id)->update(['snap_token' => $snapToken]);
-        }
-        return view(
-            'siswa.paymentDetail',
-            [
-                'siswa' => $siswa,
-                'token' => $siswa->payments[0]->snap_token,
-                'title' => 'Data Pembayaran'
-            ]
-        );
+        $siswa = Siswa::where('user_id', auth()->user()->id)
+            ->with('jurusan')
+            ->with('kelas')
+            ->with('alamat')
+            ->with('uasPayments')
+            ->with('utsPayments')
+            ->first();
+
+        $this->_createSnapToken();
+
+        return view('siswa.paymentDetail', ['siswa' => $siswa, 'title' => 'Data Pembayaran']);
     }
 
-    public function notification(Request $request)
+    private function _createSnapToken()
     {
+        $siswa = Siswa::where('user_id', auth()->user()->id)
+            ->with('jurusan')
+            ->with('kelas')
+            ->first();
+        $uasPayments = $siswa->uasPayments;
+        $utsPayments = $siswa->utsPayments;
 
-        $repp = "KOKOKO";
-        return $repp;
+        foreach ($uasPayments as $key) {
+            if (!$key->snap_token) {
+                $key["nama_siswa"] = $siswa->nama;
+                $key["no_hp"] = $siswa->no_hp;
+                $key["nis"] = $siswa->nis;
 
-        $notif = new \Midtrans\Notification();
-        // dd($notif);
+                DB::transaction(function () use ($key) {
+                    $midtrans = new CreateSnapToken($key);
+                    $snapToken = $midtrans->getSnapToken();
 
-        $transaction = $notif->transaction_status;
-        $fraud = $notif->fraud_status;
-
-        error_log("Order ID $notif->order_id: " . "transaction status = $transaction, fraud staus = $fraud");
-        $payment = Payment::where('order_id', $notif->order_id)->first();
-
-        if ($transaction == 'capture' || $transaction == 'settlement') {
-            if ($fraud == 'challenge') {
-                // TODO Set payment status in merchant's database to 'challenge'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
-            } else if ($fraud == 'accept') {
-                // TODO Set payment status in merchant's database to 'success'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "success"]);
+                    // update
+                    UasPayment::where('id', $key->id)->update(['snap_token' => $snapToken]);
+                });
             }
-        } else if ($transaction == 'cancel') {
-            if ($fraud == 'challenge') {
-                // TODO Set payment status in merchant's database to 'failure'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
-            } else if ($fraud == 'accept') {
-                // TODO Set payment status in merchant's database to 'failure'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
-            }
-        } else if ($transaction == 'deny') {
-            // TODO Set payment status in merchant's database to 'failure'
-            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
-        } else if ($transaction == 'pending') {
-            // TODO Set payment status in merchant's database to 'failure'
-            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pendind"]);
-        } else if ($transaction == 'expire') {
-            // TODO Set payment status in merchant's database to 'failure'
-            // $payment->setStatusExpired();
-            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "expired"]);
         }
-        return;
+
+        foreach ($utsPayments as $key) {
+            if (!$key->snap_token) {
+                $key["nama_siswa"] = $siswa->nama;
+                $key["no_hp"] = $siswa->no_hp;
+                $key["nis"] = $siswa->nis;
+
+                DB::transaction(function () use ($key) {
+                    $midtrans = new CreateSnapToken($key);
+                    $snapToken = $midtrans->getSnapToken();
+
+                    // update
+                    UtsPayment::where('id', $key->id)->update(['snap_token' => $snapToken]);
+                });
+            }
+        }
     }
 
     /**
@@ -123,46 +110,6 @@ class PaymentController extends Controller
      */
     public function store(StorepaymentRequest $request)
     {
-        // dd($request);
-        $siswa = Siswa::where('id', $request->id_siswa)->first();
-        $request['nama'] = $siswa->nama;
-        $request["user_id"] = $siswa->user_id;
-        $request['nis'] = $siswa->nis;
-        $request['no_hp'] = $siswa->no_hp;
-        $request['pembayaran_uts'] = 1;
-        $request['pembayaran_uas'] = 0;
-        \DB::transaction(function () use ($request) {
-            $payment = Payment::create([
-                'siswa_id' => $request->id_siswa,
-                'nominal_pembayaran' => floatval($request->nominal_pembayaran),
-                'pembayaran_uts' => $request->pembayaran_uts,
-                'pembayaran_uas' => $request->pembayaran_uas,
-            ]);
-            $payload = [
-                'transaction_details' => [
-                    'order_id'      => 'SPP-' . $payment->id,
-                    'gross_amount'  => $payment->nominal_pembayaran,
-                ],
-                'customer_details' => [
-                    'first_name'    => $request->nama,
-                    'email'         => "siswa@gmail.com",
-                ],
-                'item_details' => [
-                    [
-                        'id'       => 'spp-siswa' + $payment->siswa_id,
-                        'price'    => $payment->nominal_pembayaran,
-                        'quantity' => 1,
-                        'name'     => ucwords(str_replace('_', ' ', $request->nama)),
-                    ]
-                ]
-            ];
-            $snapToken = \Midtrans\Snap::getSnapToken($payload);
-            $payment->snap_token = $snapToken;
-            $payment->save();
-
-            $this->response['snap_token'] = $snapToken;
-        });
-        return response()->json($this->response);
     }
 
     /**
@@ -196,7 +143,14 @@ class PaymentController extends Controller
      */
     public function update(UpdatepaymentRequest $request, payment $payment)
     {
-        //
+
+        DB::transaction(function () use ($request) {
+            $midtrans = new CreateSnapToken($request);
+            $snapToken = $midtrans->getSnapToken();
+
+            // update
+            UtsPayment::where('id', $request->id)->update(['snap_token' => $snapToken]);
+        });
     }
 
     /**

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\UasPayment;
+use App\Models\UtsPayment;
+use App\Services\Midtrans\CreateSnapToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MidtransNotifController extends Controller
 {
@@ -24,51 +28,62 @@ class MidtransNotifController extends Controller
 
     public function notification(Request $request)
     {
-        // return response()->json([
-        //     'status' => 'success',
-        //     'message' => 'Notification OKOKOKOk',
-        //     'data' => $request->all()
-        // ]);
         $notif = new \Midtrans\Notification();
 
         $transaction = $notif->transaction_status;
         $fraud = $notif->fraud_status;
 
         error_log("Order ID $notif->order_id: " . "transaction status = $transaction, fraud staus = $fraud");
-        $payment = Payment::where('order_id', $notif->order_id)->first();
 
         if ($transaction == 'capture' || $transaction == 'settlement') {
             if ($fraud == 'challenge') {
                 // TODO Set payment status in merchant's database to 'challenge'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
+                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
+                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
             } else if ($fraud == 'accept') {
                 // TODO Set payment status in merchant's database to 'success'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "success"]);
+                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "success"]);
+                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "success"]);
             }
         } else if ($transaction == 'cancel') {
             if ($fraud == 'challenge') {
                 // TODO Set payment status in merchant's database to 'failure'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
             } else if ($fraud == 'accept') {
                 // TODO Set payment status in merchant's database to 'failure'
-                Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
             }
         } else if ($transaction == 'deny') {
             // TODO Set payment status in merchant's database to 'failure'
-            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+            UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+            UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
         } else if ($transaction == 'pending') {
             // TODO Set payment status in merchant's database to 'failure'
-            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pendind"]);
+            UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
+            UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
         } else if ($transaction == 'expire') {
             // TODO Set payment status in merchant's database to 'failure'
             // $payment->setStatusExpired();
-            Payment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "expired"]);
+            UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "expired"]);
+            UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "expired"]);
         }
         return;
     }
 
-    public function coba()
+    public function updateSnap(Request $request)
     {
-        return response()->json(['status' => 'success']);
+        // return response()->json([
+        //     "data" => $request->all()
+        // ], 200);
+        // dd($request->all());
+        DB::transaction(function () use ($request) {
+            $midtrans = new CreateSnapToken($request);
+            $snapToken = $midtrans->getSnapToken();
+
+            // update
+            UtsPayment::where('id', $request->id)->update(['snap_token' => $snapToken]);
+        });
     }
 }

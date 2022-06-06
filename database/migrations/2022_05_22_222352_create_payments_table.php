@@ -18,9 +18,8 @@ class CreatePaymentsTable extends Migration
             $table->foreignId('siswa_id');
             $table->string('order_id');
             $table->bigInteger('nominal_pembayaran');
-            $table->boolean('pembayaran_uts');
-            $table->boolean('pembayaran_uas');
-            $table->enum('status_pembayaran', ['pending', 'success'])->default('pending');
+            $table->enum("jenis_pembayaran", ["mid-semester", "akhir-semester"]);
+            $table->enum('status_pembayaran', ['pending', 'success', 'failed'])->default('pending');
             $table->string("snap_token")->nullable();
             $table->timestamps();
         });

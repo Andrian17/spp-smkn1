@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SiswaController;
-use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,15 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes();
-
-
-Route::resource('/siswa',  SiswaController::class)->middleware('auth');
-Route::resource('/pembayaran',  PaymentController::class)->middleware('auth');
-// Route::resource('/siswa',  SiswaController::class);
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// Route::post('/', [PaymentController::class, 'store']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::resource('/siswa',  SiswaController::class)->middleware('siswa');
+Route::resource('/pembayaran',  PaymentController::class)->middleware('siswa');
+Route::resource('/admin',  AdminController::class)->name('index', 'admin')->middleware('admin');
+
+require __DIR__ . '/auth.php';

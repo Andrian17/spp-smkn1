@@ -19,5 +19,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Jurusan::factory(5)->create();
         \App\Models\Payment::factory(4)->create();
         \App\Models\Alamat::factory(4)->create();
+        \App\Models\UasPayment::factory(4)->create();
+        \App\Models\UtsPayment::factory(4)->create();
     }
 }

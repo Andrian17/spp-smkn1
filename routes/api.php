@@ -23,4 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::post('/pembayaran', [PaymentController::class, 'store'])->middleware('auth');
 
 Route::post('/pembayaran/notification',  [MidtransNotifController::class, 'notification']);
+Route::put('/pembayaran/snap',  [MidtransNotifController::class, 'updateSnap'])->name('updateSnap.update');
 // Route::get('/pembayaran/notification', [MidtransNotifController::class, 'coba']);

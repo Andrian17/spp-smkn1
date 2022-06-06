@@ -1,6 +1,9 @@
 @extends('siswa.template.siswaContainer')
 @section('title', $title)
 @section('content')
+        {{-- Midtrans Snap FE --}}
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client') }}">
+        </script>
     <div class="container">
         <div class="row">
             <div class="col-md-12 ">
@@ -30,65 +33,159 @@
                                 <td>{{ $siswa->kelas->kelas }}</td>
                             </tr>
 
-                            @foreach ($siswa->payments as $payment)
+                            @foreach ($siswa->uasPayments as $payment)
                             <tr>
-                              <td scope="row">Pembayaran</td>
+                              <td scope="row">Jumlah</td>
                               <td>:</td>
                               <td>Rp. {{ $payment->nominal_pembayaran }}</td>
                             </tr>
                             <tr>
-                              <td scope="row">UTS</td>
+                              <td scope="row">Pembayaran</td>
                               <td>:</td>
                               <td>
-                                @if ($payment->pembayaran_uts == 1)
-                                    <span class="badge bg-success">Lunas</span>
-                                @else
-                                    <span class="badge bg-warning text-dark">Belum Lunas</span>
-                                @endif
-                                <button id="btnBayar" class="btn btn-primary">bayar</button>
+                                  <span>{{ $payment->jenis_pembayaran }}</span>
+                                <button id="{{ $payment->jenis_pembayaran }}" class="btn btn-primary ms-3">bayar</button>
+                                <script>
+                                    const clickSnap = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
+                                    clickSnap.addEventListener('click', (event) => {
+                                      event.preventDefault();
+                                      // SnapToken acquired from previous step
+                                      snap.pay('{{ $payment->snap_token }}', {
+                                          // Optional
+                                          onSuccess: function (result) {
+                                          /* You may add your own js here, this is just example */
+                                          //   location.reload();
+                                          console.log(result);
+                                          },
+                                          // Optional
+                                          onPending: function (result) {
+                                          /* You may add your own js here, this is just example */
+                                          console.log(result);
+                                          },
+                                          // Optional
+                                          onError: function (result) {
+                                          /* You may add your own js here, this is just example */
+                                          console.log(result);
+                                          }
+                                      });
+                                  });
+                                </script>
                               </td>
                             </tr>
                             <tr>
-                              <td scope="row">UAS</td>
+                              <td scope="row">Status Pembayaran</td>
                               <td>:</td>
                               <td>
-                                @if ($payment->pembayaran_uas == 1)
+                                @if ($payment->status_pembayaran == "success")
                                     <span class="badge bg-success">Lunas</span>
                                 @else
                                     <span class="badge bg-warning text-dark">Belum Lunas</span>
                                 @endif
                               </td>
                             </tr>
+                            <tr>
+                                <td>Tanggal Pembayaran</td>
+                                <td>:</td>
+                                <td>
+                                    @if ($payment->status_pembayaran == "success")
+                                        <p>{{ $payment->updated_at }}</p>
+                                    @else
+                                        <p>-</p>
+                                    @endif
+                                </td>
+                            </tr>
                             @endforeach
+
+                            <tr>
+                                <td colspan="3"></td>
+                            </tr>
+
+                            @foreach ($siswa->utsPayments as $payment)
+                            <tr>
+                              <td scope="row">Jumlah</td>
+                              <td>:</td>
+                              <td>Rp. {{ $payment->nominal_pembayaran }}</td>
+                            </tr>
+                            <tr>
+                              <td scope="row">Pembayaran</td>
+                              <td>:</td>
+                              <td>
+                                  <span>{{ $payment->jenis_pembayaran }}</span>
+                                <button id="{{ $payment->jenis_pembayaran }}" class="btn btn-primary ms-3">bayar</button>
+                                <script>
+                                    const clickSnap2 = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
+                                    clickSnap2.addEventListener('click', (event) => {
+                                      event.preventDefault();
+                                      // SnapToken acquired from previous step
+                                      snap.pay('{{ $payment->snap_token }}', {
+                                          // Optional
+                                          onSuccess: function (result) {
+                                          /* You may add your own js here, this is just example */
+                                          //   location.reload();
+                                          console.log(result);
+                                          },
+                                          // Optional
+                                          onPending: function (result) {
+                                          /* You may add your own js here, this is just example */
+                                          console.log(result);
+                                          },
+                                          // Optional
+                                          onError: function (result) {
+                                          /* You may add your own js here, this is just example */
+                                          console.log(result);
+                                          fetch('/api/pembayaran/snap', {
+                                            method: 'PUT',
+                                            headers: {
+                                              'Content-Type': 'application/json',
+                                              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            },
+                                            body: JSON.stringify({
+                                               _csrf: '{{ csrf_token() }}',
+                                               id : '{{ $payment->id }}',
+                                               nama : '{{ $siswa->nama }}',
+                                               no_hp : '{{ $siswa->no_hp }}',
+                                               nis : '{{ $siswa->nis }}',
+                                               order_id : '{{ $payment->order_id }}',
+                                               nominal_pembayaran : '{{ $payment->nominal_pembayaran }}',
+                                            })
+                                          }).then((result) => {
+                                            return result.json()
+                                          }).catch((err) => {
+                                            console.log(err);
+                                          });
+                                          }
+                                      });
+                                  });
+                                </script>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td scope="row">Status Pembayaran</td>
+                              <td>:</td>
+                              <td>
+                                @if ($payment->status_pembayaran == "success")
+                                    <span class="badge bg-success">Lunas</span>
+                                @else
+                                    <span class="badge bg-warning text-dark">Belum Lunas</span>
+                                @endif
+                              </td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal Pembayaran</td>
+                                <td>:</td>
+                                <td>
+                                    @if ($payment->status_pembayaran == "success")
+                                        <p>{{ $payment->updated_at }}</p>
+                                    @else
+                                        <p>-</p>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+
                         </tbody>
                       </table>
-                     {{-- {{ dd() }} --}}
-                      <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client') }}">
-                      </script>
-                      <script>
-                        document.getElementById('btnBayar').addEventListener('click', function (event) {
-                            event.preventDefault();
-                          // SnapToken acquired from previous step
-                          snap.pay('{{ $token }}', {
-                            // Optional
-                            onSuccess: function (result) {
-                              /* You may add your own js here, this is just example */
-                            //   location.reload();
-                            console.log(result);
-                            },
-                            // Optional
-                            onPending: function (result) {
-                              /* You may add your own js here, this is just example */
-                              console.log(result);
-                            },
-                            // Optional
-                            onError: function (result) {
-                              /* You may add your own js here, this is just example */
-                              console.log(result);
-                            }
-                          });
-                        });
-                      </script>
+
                 </div>
 
             </div>
