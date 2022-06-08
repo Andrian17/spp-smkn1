@@ -27,7 +27,7 @@ class Siswa
         }
 
         if (Auth::user()->role == 'admin') {
-            return redirect()->route('admin');
+            return redirect()->route('admin.index');
         }
     }
 }

@@ -36,6 +36,8 @@ class PaymentController extends Controller
      */
     public function index()
     {
+        $this->_createSnapToken();
+
         $siswa = Siswa::where('user_id', auth()->user()->id)
             ->with('jurusan')
             ->with('kelas')
@@ -44,7 +46,7 @@ class PaymentController extends Controller
             ->with('utsPayments')
             ->first();
 
-        $this->_createSnapToken();
+
 
         return view('siswa.paymentDetail', ['siswa' => $siswa, 'title' => 'Data Pembayaran']);
     }
@@ -89,6 +91,7 @@ class PaymentController extends Controller
                 });
             }
         }
+        return;
     }
 
     /**

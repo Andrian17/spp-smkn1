@@ -44,32 +44,54 @@
                               <td>:</td>
                               <td>
                                   <span>{{ $payment->jenis_pembayaran }}</span>
-                                <button id="{{ $payment->jenis_pembayaran }}" class="btn btn-primary ms-3">bayar</button>
-                                <script>
-                                    const clickSnap = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
-                                    clickSnap.addEventListener('click', (event) => {
-                                      event.preventDefault();
-                                      // SnapToken acquired from previous step
-                                      snap.pay('{{ $payment->snap_token }}', {
-                                          // Optional
-                                          onSuccess: function (result) {
-                                          /* You may add your own js here, this is just example */
-                                          //   location.reload();
-                                          console.log(result);
-                                          },
-                                          // Optional
-                                          onPending: function (result) {
-                                          /* You may add your own js here, this is just example */
-                                          console.log(result);
-                                          },
-                                          // Optional
-                                          onError: function (result) {
-                                          /* You may add your own js here, this is just example */
-                                          console.log(result);
-                                          }
-                                      });
-                                  });
-                                </script>
+                                @if ($payment->status_pembayaran != "success")
+                                    <button id="{{ $payment->jenis_pembayaran }}" class="btn btn-primary ms-3">bayar</button>
+                                    <script>
+                                        const clickSnap = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
+                                        clickSnap.addEventListener('click', (event) => {
+                                        event.preventDefault();
+                                        // SnapToken acquired from previous step
+                                        snap.pay('{{ $payment->snap_token }}', {
+                                            // Optional
+                                            onSuccess: function (result) {
+                                            /* You may add your own js here, this is just example */
+                                            //   location.reload();
+                                            console.log(result);
+                                            },
+                                            // Optional
+                                            onPending: function (result) {
+                                            /* You may add your own js here, this is just example */
+                                            console.log(result);
+                                            },
+                                            // Optional
+                                            onError: function (result) {
+                                            /* You may add your own js here, this is just example */
+                                            console.log(result);
+                                            fetch('/api/pembayaran/snapUAS', {
+                                                method: 'PUT',
+                                                headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({
+                                                _csrf: '{{ csrf_token() }}',
+                                                id : '{{ $payment->id }}',
+                                                nama : '{{ $siswa->nama }}',
+                                                no_hp : '{{ $siswa->no_hp }}',
+                                                nis : '{{ $siswa->nis }}',
+                                                order_id : '{{ $payment->order_id }}',
+                                                nominal_pembayaran : '{{ $payment->nominal_pembayaran }}',
+                                                })
+                                            }).then((result) => {
+                                                return result.json()
+                                            }).catch((err) => {
+                                                console.log(err);
+                                            });
+                                            }
+                                        });
+                                    });
+                                    </script>
+                                @endif
                               </td>
                             </tr>
                             <tr>
@@ -88,7 +110,7 @@
                                 <td>:</td>
                                 <td>
                                     @if ($payment->status_pembayaran == "success")
-                                        <p>{{ $payment->updated_at }}</p>
+                                        <p>{{ $payment->updated_at->diffForHumans() }}</p>
                                     @else
                                         <p>-</p>
                                     @endif
@@ -111,52 +133,55 @@
                               <td>:</td>
                               <td>
                                   <span>{{ $payment->jenis_pembayaran }}</span>
-                                <button id="{{ $payment->jenis_pembayaran }}" class="btn btn-primary ms-3">bayar</button>
-                                <script>
-                                    const clickSnap2 = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
-                                    clickSnap2.addEventListener('click', (event) => {
-                                      event.preventDefault();
-                                      // SnapToken acquired from previous step
-                                      snap.pay('{{ $payment->snap_token }}', {
-                                          // Optional
-                                          onSuccess: function (result) {
-                                          /* You may add your own js here, this is just example */
-                                          //   location.reload();
-                                          console.log(result);
-                                          },
-                                          // Optional
-                                          onPending: function (result) {
-                                          /* You may add your own js here, this is just example */
-                                          console.log(result);
-                                          },
-                                          // Optional
-                                          onError: function (result) {
-                                          /* You may add your own js here, this is just example */
-                                          console.log(result);
-                                          fetch('/api/pembayaran/snap', {
-                                            method: 'PUT',
-                                            headers: {
-                                              'Content-Type': 'application/json',
-                                              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                @if ($payment->status_pembayaran != "success")
+                                  <button id="{{ $payment->jenis_pembayaran }}" class="btn btn-primary ms-3">bayar</button>
+
+                                    <script>
+                                        const clickSnap2 = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
+                                        clickSnap2.addEventListener('click', (event) => {
+                                        event.preventDefault();
+                                        // SnapToken acquired from previous step
+                                        snap.pay('{{ $payment->snap_token }}', {
+                                            // Optional
+                                            onSuccess: function (result) {
+                                            /* You may add your own js here, this is just example */
+                                                location.reload();
+                                            console.log(result);
                                             },
-                                            body: JSON.stringify({
-                                               _csrf: '{{ csrf_token() }}',
-                                               id : '{{ $payment->id }}',
-                                               nama : '{{ $siswa->nama }}',
-                                               no_hp : '{{ $siswa->no_hp }}',
-                                               nis : '{{ $siswa->nis }}',
-                                               order_id : '{{ $payment->order_id }}',
-                                               nominal_pembayaran : '{{ $payment->nominal_pembayaran }}',
-                                            })
-                                          }).then((result) => {
-                                            return result.json()
-                                          }).catch((err) => {
-                                            console.log(err);
-                                          });
-                                          }
-                                      });
-                                  });
-                                </script>
+                                            // Optional
+                                            onPending: function (result) {
+                                            /* You may add your own js here, this is just example */
+                                            console.log(result);
+                                            },
+                                            // Optional
+                                            onError: function (result) {
+                                            /* You may add your own js here, this is just example */
+                                            console.log(result);
+                                            fetch('/api/pembayaran/snapUTS', {
+                                                method: 'PUT',
+                                                headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({
+                                                _csrf: '{{ csrf_token() }}',
+                                                id : '{{ $payment->id }}',
+                                                nama : '{{ $siswa->nama }}',
+                                                no_hp : '{{ $siswa->no_hp }}',
+                                                nis : '{{ $siswa->nis }}',
+                                                order_id : '{{ $payment->order_id }}',
+                                                nominal_pembayaran : '{{ $payment->nominal_pembayaran }}',
+                                                })
+                                            }).then((result) => {
+                                                return result.json()
+                                            }).catch((err) => {
+                                                console.log(err);
+                                            });
+                                            }
+                                        });
+                                    });
+                                    </script>
+                                 @endif
                               </td>
                             </tr>
                             <tr>
@@ -175,7 +200,7 @@
                                 <td>:</td>
                                 <td>
                                     @if ($payment->status_pembayaran == "success")
-                                        <p>{{ $payment->updated_at }}</p>
+                                        <p>{{ $payment->updated_at->diffForHumans() }}</p>
                                     @else
                                         <p>-</p>
                                     @endif

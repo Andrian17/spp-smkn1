@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payment;
 use App\Models\UasPayment;
 use App\Models\UtsPayment;
 use App\Services\Midtrans\CreateSnapToken;
@@ -35,55 +34,108 @@ class MidtransNotifController extends Controller
 
         error_log("Order ID $notif->order_id: " . "transaction status = $transaction, fraud staus = $fraud");
 
+        // UAS
+        $uasPay = UasPayment::where('order_id', $notif->order_id)->first();
+        $utsPay = UtsPayment::where('order_id', $notif->order_id)->first();
+
         if ($transaction == 'capture' || $transaction == 'settlement') {
             if ($fraud == 'challenge') {
                 // TODO Set payment status in merchant's database to 'challenge'
-                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
-                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
+                if ($uasPay) {
+                    $uasPay->status_pembayaran = "pending";
+                    $uasPay->save();
+                }
+                if ($utsPay) {
+                    $utsPay->status_pembayaran = "pending";
+                    $utsPay->save();
+                }
             } else if ($fraud == 'accept') {
                 // TODO Set payment status in merchant's database to 'success'
-                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "success"]);
-                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "success"]);
+                if ($uasPay) {
+                    $uasPay->status_pembayaran = "success";
+                    $uasPay->save();
+                }
+                if ($utsPay) {
+                    $utsPay->status_pembayaran = "success";
+                    $utsPay->save();
+                }
             }
         } else if ($transaction == 'cancel') {
             if ($fraud == 'challenge') {
                 // TODO Set payment status in merchant's database to 'failure'
-                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
-                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+                if ($uasPay) {
+                    $uasPay->status_pembayaran = "failure";
+                    $uasPay->save();
+                }
+                if ($utsPay) {
+                    $utsPay->status_pembayaran = "failure";
+                    $utsPay->save();
+                }
             } else if ($fraud == 'accept') {
                 // TODO Set payment status in merchant's database to 'failure'
-                UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
-                UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+                if ($uasPay) {
+                    $uasPay->status_pembayaran = "failure";
+                    $uasPay->save();
+                }
+                if ($utsPay) {
+                    $utsPay->status_pembayaran = "failure";
+                    $utsPay->save();
+                }
             }
         } else if ($transaction == 'deny') {
             // TODO Set payment status in merchant's database to 'failure'
-            UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
-            UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "failure"]);
+            if ($uasPay) {
+                $uasPay->status_pembayaran = "failure";
+                $uasPay->save();
+            }
+            if ($utsPay) {
+                $utsPay->status_pembayaran = "failure";
+                $utsPay->save();
+            }
         } else if ($transaction == 'pending') {
             // TODO Set payment status in merchant's database to 'failure'
-            UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
-            UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "pending"]);
+            if ($uasPay) {
+                $uasPay->status_pembayaran = "failure";
+                $uasPay->save();
+            }
+            if ($utsPay) {
+                $utsPay->status_pembayaran = "failure";
+                $utsPay->save();
+            }
         } else if ($transaction == 'expire') {
             // TODO Set payment status in merchant's database to 'failure'
-            // $payment->setStatusExpired();
-            UasPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "expired"]);
-            UtsPayment::where('order_id', $notif->order_id)->update(['status_pembayaran' => "expired"]);
+            if ($uasPay) {
+                $uasPay->status_pembayaran = "failure";
+                $uasPay->save();
+            }
+            if ($utsPay) {
+                $utsPay->status_pembayaran = "failure";
+                $utsPay->save();
+            }
         }
         return;
     }
 
-    public function updateSnap(Request $request)
+    public function updateSnapUTS(Request $request)
     {
-        // return response()->json([
-        //     "data" => $request->all()
-        // ], 200);
-        // dd($request->all());
+        $request['order_id'] = 'spp-' . uniqid();
         DB::transaction(function () use ($request) {
             $midtrans = new CreateSnapToken($request);
             $snapToken = $midtrans->getSnapToken();
 
             // update
-            UtsPayment::where('id', $request->id)->update(['snap_token' => $snapToken]);
+            UtsPayment::where('id', $request->id)->update(['order_id' => $request->order_id, 'snap_token' => $snapToken]);
+        });
+    }
+    public function updateSnapUAS(Request $request)
+    {
+        $request['order_id'] = 'spp-' . uniqid();
+        DB::transaction(function () use ($request) {
+            $midtrans = new CreateSnapToken($request);
+            $snapToken = $midtrans->getSnapToken();
+
+            // update
+            UasPayment::where('id', $request->id)->update(['order_id' => $request->order_id, 'snap_token' => $snapToken]);
         });
     }
 }

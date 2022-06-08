@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Models\Siswa;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -16,7 +17,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('template.main');
+        return view('admin.adminDashboard');
     }
 
     /**
@@ -83,5 +84,40 @@ class AdminController extends Controller
     public function destroy(Admin $admin)
     {
         //
+    }
+
+    // Semua Data Siswa
+    public function getAllSiswa()
+    {
+        $siswa = Siswa::latest()->get();
+        // dd($siswa);
+        // $utsPay = Siswa::where('status', '=', '1')->count();
+        return view('admin.allSiswa', compact('siswa'));
+    }
+
+    // Semua Data Pembayaran
+    public function allPembayaran()
+    {
+        $pembayaran = Siswa::latest()->paginate(10);
+        return view('admin.allPembayaran', compact('pembayaran'));
+    }
+
+    // Semua Data Kelas
+    public function allKelas()
+    {
+        $kelas = Siswa::latest()->paginate(10);
+        return view('admin.allKelas', compact('kelas'));
+    }
+
+    // Semua Data Jurusan
+    public function allJurusan()
+    {
+        $jurusan = Siswa::latest()->paginate(10);
+        return view('admin.allJurusan', compact('jurusan'));
+    }
+
+    public function tampilSiswa(Siswa $siswa)
+    {
+        return view('admin.tampilSiswa', compact('siswa'));
     }
 }

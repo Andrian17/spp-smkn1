@@ -1,0 +1,36 @@
+<div id="layoutSidenav_nav">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-sidenav-menu">
+            <div class="nav">
+                <div class="sb-sidenav-menu-heading">admin</div>
+                <a class="nav-link" href="{{ route('admin.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Dashboard
+                </a>
+                <div class="sb-sidenav-menu-heading">Master Data</div>
+
+                <a class="nav-link" href="{{ route('admin.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Data Pembayaran
+                </a>
+                <a class="nav-link" href="{{ route('admin.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Data Siswa
+                </a>
+                <a class="nav-link" href="{{ route('admin.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    Data Jurusan
+                </a>
+                <a class="nav-link" href="tables.html">
+                    <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                    Nominal Pembayaran
+                </a>
+
+            </div>
+        </div>
+        <div class="sb-sidenav-footer">
+            <div class="small">Logged in as:</div>
+            {{ Auth::user()->name }} | {{ Auth::user()->role }}
+        </div>
+    </nav>
+</div>

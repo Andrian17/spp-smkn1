@@ -26,6 +26,12 @@ Route::get('/dashboard', function () {
 
 Route::resource('/siswa',  SiswaController::class)->middleware('siswa');
 Route::resource('/pembayaran',  PaymentController::class)->middleware('siswa');
-Route::resource('/admin',  AdminController::class)->name('index', 'admin')->middleware('admin');
+
+Route::middleware('admin')->group(function () {
+    Route::resource('/admin', AdminController::class);
+    Route::get('/getAllSiswa',  [AdminController::class, 'getAllSiswa'])->name('admin.allsiswa');
+    Route::get('/tampilSiswa/{siswa}',  [AdminController::class, 'tampilSiswa'])->name('admin.tampilSiswa');
+});
+
 
 require __DIR__ . '/auth.php';
