@@ -5,11 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Models\Jurusan;
 use App\Models\Siswa;
+use App\Models\UasPayment;
+use App\Models\UtsPayment;
+// use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Models\Alamat;
+use App\Models\Kelas;
+use App\Models\User;
+use DateTime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +47,14 @@ class AdminController extends Controller
      */
     public function create()
     {
-        //
+        // $siswa = Siswa::all();
+
+        $jurusan = Jurusan::all();
+        $kelas = Kelas::all();
+        return view('admin.tambahSiswa', [
+            'jurusan' => $jurusan,
+            'kelas' => $kelas,
+        ]);
     }
 
     /**
@@ -38,7 +65,62 @@ class AdminController extends Controller
      */
     public function store(StoreAdminRequest $request)
     {
-        //
+        // DB::transaction(function () use ($request) {
+        // Create User
+        $user = $request->validate([
+            'email' => 'required|email|unique:users',
+            'nama' => 'required',
+        ]);
+        $user['name'] = $request->nama;
+        $user['password'] = Hash::make($request->nis);
+        $saveUser = User::create($user);
+        // Create Siswa
+        $siswa = $request->validate([
+            'nis' => 'required|unique:siswas',
+            'nama' => 'required',
+            'jenis_kelamin' => 'required',
+            'no_hp' => 'required|numeric|min:11',
+            'semester' => 'required',
+            'tanggal_lahir' => 'required',
+            'agama' => 'required',
+            'jurusan_id' => 'required',
+            'kelas_id' => 'required',
+            'angkatan' => 'required'
+        ]);
+        $siswa["user_id"] = $saveUser->id;
+        $siswa["foto"] = "https://via.placeholder.com/400x400.png/00ccee?text=people+sit";
+        $saveSiswa = Siswa::create($siswa);
+        // Create Alamat
+        $alamat = $request->validate([
+            'alamat' => 'required'
+        ]);
+        $alamat["siswa_id"] = $saveSiswa->id;
+        Alamat::create($alamat);
+        // Create Payment
+        $this->_createPayments($saveSiswa->id);
+        // });
+        return redirect('/dashboard/getAllSiswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa baru telah ditambahkan </div>');
+    }
+
+    private function _createPayments($siswa_id)
+    {
+        $siswa = $siswa_id;
+        DB::transaction(function () use ($siswa) {
+            // Create UTS Payment
+            UtsPayment::create([
+                'siswa_id' => $siswa,
+                'order_id' => 'spp-' . uniqid(),
+                'nominal_pembayaran' => 240000,
+                'jenis_pembayaran' => 'mid-semester',
+            ]);
+            // Create UAS Payment
+            UasPayment::create([
+                'siswa_id' => $siswa,
+                'order_id' => 'spp-' . uniqid(),
+                'nominal_pembayaran' => 240000,
+                'jenis_pembayaran' => 'akhir-semester',
+            ]);
+        });
     }
 
     /**
@@ -89,17 +171,15 @@ class AdminController extends Controller
     // Semua Data Siswa
     public function getAllSiswa()
     {
-        $siswa = Siswa::latest()->get();
-        // dd($siswa);
-        // $utsPay = Siswa::where('status', '=', '1')->count();
+        $siswa = Siswa::with('utsPayments')->with('uasPayments')->latest()->get();
         return view('admin.allSiswa', compact('siswa'));
     }
 
     // Semua Data Pembayaran
     public function allPembayaran()
     {
-        $pembayaran = Siswa::latest()->paginate(10);
-        return view('admin.allPembayaran', compact('pembayaran'));
+        $siswa = Siswa::with('utsPayments')->with('uasPayments')->latest()->get();
+        return view('admin.allPembayaran', ['siswa' => $siswa]);
     }
 
     // Semua Data Kelas
@@ -107,13 +187,6 @@ class AdminController extends Controller
     {
         $kelas = Siswa::latest()->paginate(10);
         return view('admin.allKelas', compact('kelas'));
-    }
-
-    // Semua Data Jurusan
-    public function allJurusan()
-    {
-        $jurusan = Siswa::latest()->paginate(10);
-        return view('admin.allJurusan', compact('jurusan'));
     }
 
     public function tampilSiswa(Siswa $siswa)

@@ -33,6 +33,9 @@
                                             <span class='badge bg-danger'>belum</span>
                                         @endif
                                     </p>
+                                    @if ($siswa->utsPayments[0]->status_pembayaran == "success")
+                                        <h6>dibayar pada: {{ $siswa->utsPayments[0]->created_at->diffForHumans() }}</h6>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -49,6 +52,9 @@
                                             <span class='badge bg-danger'>belum</span>
                                         @endif
                                     </p>
+                                    @if ($siswa->utsPayments[0]->status_pembayaran == "success")
+                                        <h6>dibayar pada: {{ $siswa->utsPayments[0]->created_at->diffForHumans() }}</h6>
+                                    @endif
                                 </div>
                             </div>
                         </div>

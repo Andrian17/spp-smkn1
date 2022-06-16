@@ -9,6 +9,10 @@ class Jurusan extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'jurusan',
+    ];
+
     public function siswa()
     {
         return $this->hasMany(Siswa::class);

@@ -13,7 +13,21 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#!">Settings</a></li>
                 <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
+                <li>
+                    {{-- <form method="POST" action="{{ route('logout') }}" onsubmit="event.preventDefault();>
+                        @csrf()
+                        <button class="dropdown-item">Logout</button>
+                    </form> --}}
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <x-dropdown-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-dropdown-link>
+                    </form>
+                </li>
             </ul>
         </li>
     </ul>

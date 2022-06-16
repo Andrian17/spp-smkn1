@@ -18,7 +18,7 @@ class JurusanFactory extends Factory
             'Keuangan Syariah',
             'Administrasi Perkantoran',
             'Tata Niaga',
-            'Usaha Perjalanan Wisata',
+            'Usaha Perjalanan Pariwisata',
         ];
         return [
             'jurusan' => $jurusan[array_rand($jurusan)],

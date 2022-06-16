@@ -15,7 +15,6 @@ class KelasFactory extends Factory
     {
         return [
             'kelas' => $this->faker->numberBetween(1, 3),
-            'tahun_ajaran' => $this->faker->year,
         ];
     }
 }

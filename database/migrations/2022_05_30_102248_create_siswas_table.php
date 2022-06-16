@@ -25,6 +25,7 @@ class CreateSiswasTable extends Migration
             $table->integer('semester');
             $table->string('tanggal_lahir');
             $table->string('agama');
+            $table->string('angkatan');
             $table->string('foto');
             $table->timestamps();
         });

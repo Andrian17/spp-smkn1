@@ -15,8 +15,6 @@ class AlamatFactory extends Factory
     {
         return [
             'siswa_id' => $this->faker->numberBetween(1, 4),
-            'provinsi' => $this->faker->state,
-            'kota' => $this->faker->city,
             'alamat' => $this->faker->address,
         ];
     }

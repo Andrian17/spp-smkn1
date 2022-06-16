@@ -8,10 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Alamat extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'student_id',
-        'alamat',
-        'kota',
-        'provinsi',
+    protected $guarded = [
+        "id"
     ];
 }

@@ -9,6 +9,10 @@ class Siswa extends Model
 {
     use HasFactory;
 
+    protected $guarded = [
+        'id'
+    ];
+
     function user()
     {
         return $this->hasOne(User::class);

@@ -8,6 +8,12 @@ use App\Http\Requests\UpdateSiswaRequest;
 
 class SiswaController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,9 +22,6 @@ class SiswaController extends Controller
     public function index()
     {
         $siswa = Siswa::with('alamat')->where('user_id', auth()->user()->id)->first();
-        // $siswa = auth()->user()->siswa
-        // dd($alamat);
-        // dd($siswa);
         return view('siswa.siswaDetail', ['siswa' => $siswa, 'title' => 'Data Siswa']);
     }
 
@@ -40,7 +43,8 @@ class SiswaController extends Controller
      */
     public function store(StoreSiswaRequest $request)
     {
-        //
+        dd($request->all());
+        return;
     }
 
     /**
