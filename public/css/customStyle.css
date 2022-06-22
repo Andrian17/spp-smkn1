@@ -1,0 +1,30 @@
+@media only screen and (max-width: 768px) {
+    #detailSiswa {
+        display: block !important;
+    }
+
+    #fotoSiswa {
+        margin-top: 10px;
+        width: 100%;
+        margin-left: -10px;
+    }
+
+    #fotoSiswa > img {
+        max-width: 25%;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    #fotoSiswa {
+        width: 25%;
+    }
+    #fotoSiswa > img {
+        width: 80%;
+    }
+}
+
+#heroImage {
+    background-color: greenyellow;
+    background-size: cover;
+    min-height: 900px;
+}

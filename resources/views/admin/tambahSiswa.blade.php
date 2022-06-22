@@ -1,21 +1,21 @@
 @extends('template.main')
 @section('content')
-    <h1 class="mt-4">Tambah Siswa</h1>
+    <h3 class="mt-4">Tambah Siswa</h3>
     <div class="row">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        @if (session()->has('pesan'))
-            {!! session('pesan') !!}
-        @endif
-        <div class="col-md-8 d-flex">
-            <form method="POST" action="{{ route('admin.store') }}" enctype="multipart/form-data">
+        <div class="col-lg-12 d-flex mx-auto">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @if (session()->has('pesan'))
+                {!! session('pesan') !!}
+            @endif
+            <form method="POST" action="{{ route('admin.store') }}" enctype="multipart/form-data" class="mx-auto">
                 @csrf
                 <div class="d-flex justify-content-between ">
                     <div class="form-group mx-2 my-2">
@@ -93,21 +93,9 @@
                         <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                     </div>
                 </div>
-                {{-- <div class="d-flex justify-content-center">
-                    <div class="form-group mx-2 my-2">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="password">
-                    </div>
-                    <div class="form-group mx-2 my-2">
-                        <label for="password2">Confirm Password</label>
-                        <input type="password" class="form-control" id="password2" name="password2" placeholder="confirm password">
-                    </div>
-                </div> --}}
-                <div class="mb-3">
-                    <label for="formFile" class="form-label">Foto Profile</label>
-                    <input class="form-control" type="file" id="formFile">
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-primary mx-auto">Tambah</button>
                 </div>
-                <button type="submit" class="btn btn-primary">Tambah</button>
             </form>
         </div>
     </div>

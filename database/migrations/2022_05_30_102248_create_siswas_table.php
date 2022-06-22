@@ -26,7 +26,7 @@ class CreateSiswasTable extends Migration
             $table->string('tanggal_lahir');
             $table->string('agama');
             $table->string('angkatan');
-            $table->string('foto');
+            $table->string('foto')->default('foto-siswa/user-default.png');
             $table->timestamps();
         });
     }

@@ -10,15 +10,15 @@
                 <div class="sb-sidenav-menu-heading">Master Data</div>
 
                 <a class="nav-link {{ Request::is('dashboard/getAllSiswa') ? 'active' : '' }}" href="{{ route('admin.allSiswa') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-users"></i></div>
                     Data Siswa
                 </a>
                 <a class="nav-link {{ Request::is('dashboard/allPembayaran') ? 'active' : '' }}" href="{{ route('admin.allPembayaran') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-money-bill-1-wave"></i></div>
                     Data Pembayaran
                 </a>
-                <a class="nav-link {{ Request::is('jurusan/*') ? 'active' : '' }}" href="{{ route('jurusan.index') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                <a class="nav-link {{ Request::is('jurusan') ? 'active' : '' }}" href="{{ route('jurusan.index') }}">
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-person-chalkboard"></i></div>
                     Data Jurusan
                 </a>
                 {{-- <a class="nav-link" href="tables.html">

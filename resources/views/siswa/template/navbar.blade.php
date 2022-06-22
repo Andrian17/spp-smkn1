@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-dark sticky-top bg-dark flex-md-nowrap p-3 shadow">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-secondary">
   <a class="navbar-brand me-0 px-3" href="/siswa">HOME</a>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>

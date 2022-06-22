@@ -101,8 +101,6 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        $siswa = Siswa::where('user_id', auth()->user()->id)->with('jurusan')->with('kelas')->with('payments')->first();
-        return view('siswa.paymentCreate', ['siswa' => $siswa, 'title' => 'Pembayaran SPP']);
     }
 
     /**

@@ -2,7 +2,7 @@
 @section('content')
     <h1 class="mt-4">Data Siswa</h1>
     <div class="row">
-        <div class="col-lg-10">
+        <div class="col-lg-12">
             @if (session()->has('pesan'))
                 {!! session('pesan') !!}
             @endif
@@ -22,7 +22,7 @@
                     @foreach ($siswa as $s)
                         <tr >
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td ><img src="{{ $s->foto }}" alt="{{ $s->nama }}" class="" style="width: 100px; height: 100px;"></td>
+                            <td ><img src=" {{ asset('storage/' . $s->foto)  }}" alt="{{ $s->nama }}" class="" style="width: 100px; height: 100px;"></td>
                             <td>{{ $s->nama }}</td>
                             <td>{{ $s->nis }}</td>
                             <td>{{ $s->no_hp }}</td>

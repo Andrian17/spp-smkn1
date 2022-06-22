@@ -23,7 +23,6 @@ class SiswaFactory extends Factory
             'no_hp' => $this->faker->phoneNumber(),
             'semester' => $this->faker->numberBetween(1, 2),
             'agama' => $this->faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha']),
-            'foto' => $this->faker->imageUrl(400, 400, 'people'),
             'angkatan' => $this->faker->year(),
             'tanggal_lahir' => $this->faker->date(),
         ];

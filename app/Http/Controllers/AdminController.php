@@ -65,40 +65,39 @@ class AdminController extends Controller
      */
     public function store(StoreAdminRequest $request)
     {
-        // DB::transaction(function () use ($request) {
-        // Create User
-        $user = $request->validate([
-            'email' => 'required|email|unique:users',
-            'nama' => 'required',
-        ]);
-        $user['name'] = $request->nama;
-        $user['password'] = Hash::make($request->nis);
-        $saveUser = User::create($user);
-        // Create Siswa
-        $siswa = $request->validate([
-            'nis' => 'required|unique:siswas',
-            'nama' => 'required',
-            'jenis_kelamin' => 'required',
-            'no_hp' => 'required|numeric|min:11',
-            'semester' => 'required',
-            'tanggal_lahir' => 'required',
-            'agama' => 'required',
-            'jurusan_id' => 'required',
-            'kelas_id' => 'required',
-            'angkatan' => 'required'
-        ]);
-        $siswa["user_id"] = $saveUser->id;
-        $siswa["foto"] = "https://via.placeholder.com/400x400.png/00ccee?text=people+sit";
-        $saveSiswa = Siswa::create($siswa);
-        // Create Alamat
-        $alamat = $request->validate([
-            'alamat' => 'required'
-        ]);
-        $alamat["siswa_id"] = $saveSiswa->id;
-        Alamat::create($alamat);
-        // Create Payment
-        $this->_createPayments($saveSiswa->id);
-        // });
+        DB::transaction(function () use ($request) {
+            // Create User
+            $user = $request->validate([
+                'email' => 'required|email|unique:users',
+                'nama' => 'required',
+            ]);
+            $user['name'] = $request->nama;
+            $user['password'] = Hash::make($request->nis);
+            $saveUser = User::create($user);
+            // Create Siswa
+            $siswa = $request->validate([
+                'nis' => 'required|unique:siswas',
+                'nama' => 'required',
+                'jenis_kelamin' => 'required',
+                'no_hp' => 'required|numeric|min:11',
+                'semester' => 'required',
+                'tanggal_lahir' => 'required',
+                'agama' => 'required',
+                'jurusan_id' => 'required',
+                'kelas_id' => 'required',
+                'angkatan' => 'required'
+            ]);
+            $siswa["user_id"] = $saveUser->id;
+            $saveSiswa = Siswa::create($siswa);
+            // Create Alamat
+            $alamat = $request->validate([
+                'alamat' => 'required'
+            ]);
+            $alamat["siswa_id"] = $saveSiswa->id;
+            Alamat::create($alamat);
+            // Create Payment
+            $this->_createPayments($saveSiswa->id);
+        });
         return redirect('/dashboard/getAllSiswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa baru telah ditambahkan </div>');
     }
 

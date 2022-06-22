@@ -8,12 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    {{-- fav icon --}}
+    <link rel="icon" type="image/png" href="{{ asset('storage/smkn1.ico') }}"/>
   </head>
 
     <body class="sb-nav-fixed">
         @include('template.navBar')
         <div id="layoutSidenav">
-        @include('template.sideBar')
+            @include('template.sideBar')
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
