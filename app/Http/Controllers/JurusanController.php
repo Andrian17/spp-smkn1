@@ -23,7 +23,7 @@ class JurusanController extends Controller
      */
     public function index()
     {
-        $jurusan = Jurusan::all();
+        $jurusan = Jurusan::with('siswa')->get();
         $style = [
             'bg-primary' => 'bg-primary',
             'bg-success' => 'bg-success',

@@ -13,8 +13,8 @@
                     Pembayaran
                 </a>
                 <a class="nav-link text-dark" href='/siswa/{{ $siswa->id }}' target='__blank'>
-                    <div class="sb-nav-link-icon"><i class="fa-solid fa-envelope-open-dollar"></i></div>
-                    Data Pembayaran
+                    <div class="sb-nav-link-icon"><i class="fa-solid fa-file-invoice-dollar"></i></i></div>
+                    Bukti Pembayaran
                 </a>
             </div>
         </div>

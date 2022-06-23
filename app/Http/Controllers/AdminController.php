@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SiswaExport;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
@@ -15,12 +16,14 @@ use App\Http\Requests;
 use App\Models\Alamat;
 use App\Models\Kelas;
 use App\Models\User;
-use DateTime;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+
+
 
 class AdminController extends Controller
 {
@@ -122,6 +125,23 @@ class AdminController extends Controller
         });
     }
 
+    public function exportExcell()
+    {
+        return Excel::download(new SiswaExport, 'pembayaran.xlsx');
+    }
+
+    public function exportPDF()
+    {
+        $siswa = Siswa::with('utsPayments')
+            ->with('uasPayments')
+            ->with('jurusan')
+            ->with('kelas')
+            ->with('alamat')
+            ->get();
+        $pdf = PDF::loadView('exports.laporanPembayaran', ['siswa' => $siswa])->setPaper('a4', 'potrait');
+        return $pdf->stream('laporanSPP.pdf');
+    }
+
     /**
      * Display the specified resource.
      *
@@ -170,21 +190,36 @@ class AdminController extends Controller
     // Semua Data Siswa
     public function getAllSiswa()
     {
-        $siswa = Siswa::with('utsPayments')->with('uasPayments')->latest()->get();
+        $siswa = Siswa::with('utsPayments')
+            ->with('uasPayments')
+            ->with('jurusan')
+            ->with('kelas')
+            ->with('alamat')
+            ->get();
         return view('admin.allSiswa', compact('siswa'));
     }
 
     // Semua Data Pembayaran
     public function allPembayaran()
     {
-        $siswa = Siswa::with('utsPayments')->with('uasPayments')->latest()->get();
+        $siswa = Siswa::with('utsPayments')
+            ->with('uasPayments')
+            ->with('jurusan')
+            ->with('kelas')
+            ->with('alamat')
+            ->get();
         return view('admin.allPembayaran', ['siswa' => $siswa]);
     }
 
     // Semua Data Kelas
     public function allKelas()
     {
-        $kelas = Siswa::latest()->paginate(10);
+        $kelas = Siswa::with('utsPayment')
+            ->with('uasPayment')
+            ->with('jurusan')
+            ->with('kelas')
+            ->with('alamat')
+            ->get();
         return view('admin.allKelas', compact('kelas'));
     }
 

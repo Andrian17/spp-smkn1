@@ -25,8 +25,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::resource('/siswa',  SiswaController::class)->middleware('siswa');
-Route::resource('/pembayaran',  PaymentController::class)->middleware('siswa');
+Route::middleware('siswa')->group(function () {
+    Route::resource('/siswa',  SiswaController::class)->middleware('siswa');
+    Route::resource('/pembayaran',  PaymentController::class)->middleware('siswa');
+});
+
 
 Route::middleware('admin')->group(function () {
     Route::resource('/admin', AdminController::class)->middleware('admin');
@@ -36,6 +39,9 @@ Route::middleware('admin')->group(function () {
     Route::get('/dashboard/allJurusan',  [AdminController::class, 'allJurusan'])->name('admin.jurusan');
     Route::get('/dashboard/tampilJurusan/{jurusan}',  [AdminController::class, 'tampilJurusan'])->name('admin.tampilJurusan');
     Route::put('/dashboard/editJurusan/{jurusan}',  [AdminController::class, 'editJurusan'])->name('admin.editJurusan');
+    // PDF
+    Route::get('/dashboard/exportExcell',  [AdminController::class, 'exportExcell'])->name('admin.exportExcell');
+    Route::get('/dashboard/exportPDF',  [AdminController::class, 'exportPDF'])->name('admin.exportPDF');
     Route::resource('/jurusan',  JurusanController::class);
 });
 

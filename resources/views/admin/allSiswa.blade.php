@@ -6,7 +6,7 @@
             @if (session()->has('pesan'))
                 {!! session('pesan') !!}
             @endif
-            <a href="{{ route('admin.create') }}" class="btn btn-primary my-3">Tambah Siswa</a>
+            <a href="{{ route('admin.create') }}" class="btn btn-info rounded-pill btn-sm text-decoration-none my-3"><i class="fa-solid fa-user-plus"></i>Tambah Siswa<i class="fa-solid fa-user-graduate"></i></a>
             <table class="table" id="siswaTable">
                 <thead>
                   <tr>

@@ -16,7 +16,7 @@
       <title>Hello, world!</title>
    </head>
    <body>
-    <div class='container'>
+    {{-- <div class='container'>
         <div class='row'>
             <div class='col-md-12 '>
                 <h1>Profil Siswa</h1>
@@ -130,6 +130,136 @@
 
                 </div>
 
+            </div>
+        </div>
+    </div> --}}
+    <div class='container'>
+        <div class='row'>
+            <div class='col-lg-12'>
+                <h3>Profil Siswa</h3>
+                <div class='jumbotron'>
+                    <div class="card mx-auto rounded-top">
+                        <h6 class="bg-primary p-2 text-light rounded-top">Detail Data Siswa</h6>
+                        {{-- <img src="{{ asset('storage/' . $siswa->foto) }}" class="card-img-top mx-auto border border-success p-1 mt-2" alt="{{ $siswa->nama }}" style="height: 100px;  width: 80px;"> --}}
+                        <div class="card-body rounded-top mx-auto ">
+                          <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td scope="row">NIS</td>
+                                    <td>:</td>
+                                    <td>{{ $siswa->nis }}</td>
+                                </tr>
+                                <tr>
+                                    <td>NAMA</td>
+                                    <td>:</td>
+                                    <td>{{ $siswa->nama }}</td>
+                                </tr>
+                                <tr>
+                                    <td>P/L</td>
+                                    <td>:</td>
+                                    <td>{{ $siswa->jenis_kelamin }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Jurusan</td>
+                                    <td>:</td>
+                                    <td>{{ $siswa->jurusan->jurusan }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kelas</td>
+                                    <td>:</td>
+                                    <td>{{ $siswa->kelas->kelas }}</td>
+                                </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+                    <div class="card mx-auto mt-4 mb-4 rounded-top">
+                        <h6 class="bg-primary p-2 text-light rounded-top">Data Pembayaran</h6>
+                        <div class="card-body mx-auto">
+                            <table class='table'>
+                                <tbody>
+                                    @foreach ($siswa->uasPayments as $payment)
+                                    <tr>
+                                      <td scope='row'>Jumlah</td>
+                                      <td>:</td>
+                                      <td>Rp. {{ $payment->nominal_pembayaran }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td scope='row'>Pembayaran</td>
+                                      <td>:</td>
+                                      <td>
+                                          <span>{{ $payment->jenis_pembayaran }}</span>
+
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td scope='row'>Status Pembayaran</td>
+                                      <td>:</td>
+                                      <td>
+                                        @if ($payment->status_pembayaran == 'success')
+                                            <span class='badge bg-success'>Lunas</span>
+                                        @else
+                                            <span class='badge bg-danger text-dark'>Belum Lunas</span>
+                                        @endif
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal Pembayaran</td>
+                                        <td>:</td>
+                                        <td>
+                                            @if ($payment->status_pembayaran == 'success')
+                                                <p>{{ $payment->updated_at }}</p>
+                                            @else
+                                                <p>-</p>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    <tr>
+                                        <td colspan='3'></td>
+                                    </tr>
+                                    @foreach ($siswa->utsPayments as $payment)
+                                    <tr>
+                                      <td scope='row'>Jumlah</td>
+                                      <td>:</td>
+                                      <td>Rp. {{ $payment->nominal_pembayaran }}</td>
+                                    </tr>
+                                    <tr>
+                                      <td scope='row'>Pembayaran</td>
+                                      <td>:</td>
+                                      <td>
+                                          <span>{{ $payment->jenis_pembayaran }}</span>
+
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td scope='row'>Status Pembayaran</td>
+                                      <td>:</td>
+                                      <td>
+                                        @if ($payment->status_pembayaran == 'success')
+                                            <span class='badge bg-success'>Lunas</span>
+                                        @else
+                                            <span class='badge bg-danger text-dark'>Belum Lunas</span>
+                                        @endif
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal Pembayaran</td>
+                                        <td>:</td>
+                                        <td>
+                                            @if ($payment->status_pembayaran == 'success')
+                                                <p>{{ $payment->updated_at }}</p>
+                                            @else
+                                                <p>-</p>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

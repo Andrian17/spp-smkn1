@@ -4,6 +4,10 @@
     <div class="row">
         <div class="col-lg-10">
             <div class="card mb-4">
+                <div class="d-block ms-auto">
+                    {{-- <a href="{{ route('admin.exportPDF') }}" class="btn btn-secondary">export pdf</a> --}}
+                    <a href="{{ route('admin.exportExcell') }}" class="btn btn-success rounded-pill btn-sm text-decoration-none m-2" target="__blank"><i class="fa-solid fa-file-excel"></i> export excell <i class="fa-solid fa-file-export"></i></a>
+                </div>
                 <div class="card-header"><i class="fas fa-table mr-1"></i>Data Pembayaran</div>
                 <div class="card-body">
                     <div class="table-responsive">

@@ -46,6 +46,9 @@
                     </div>
                     <div class="card mx-auto mt-4 mb-4 rounded-top">
                         <h6 class="bg-primary p-2 text-light rounded-top">Data Pembayaran</h6>
+                        <div class="d-flex">
+                            <a href='/siswa/{{ $siswa->id }}' target='__blank' class="btn btn-info btn-sm rounded-pill m-2 text-decoration-none p-2"><i class="fa-solid fa-file-pdf"></i> Bukti pembayaran <i class="fa-solid fa-file-arrow-down"></i></a>
+                        </div>
                         <div class="card-body mx-auto">
                             <table class='table'>
                                 <tbody>
@@ -100,6 +103,8 @@
                                                         })
                                                     }).then((result) => {
                                                         return result.json()
+                                                        alert("Token pembayaran anda telah diperbarui, lakukan trnasaksi kembali...!")
+                                                        location.reload()
                                                     }).catch((err) => {
                                                         console.log(err);
                                                     });

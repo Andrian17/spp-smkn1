@@ -45,9 +45,6 @@ class PaymentController extends Controller
             ->with('uasPayments')
             ->with('utsPayments')
             ->first();
-
-
-
         return view('siswa.paymentDetail', ['siswa' => $siswa, 'title' => 'Data Pembayaran']);
     }
 
