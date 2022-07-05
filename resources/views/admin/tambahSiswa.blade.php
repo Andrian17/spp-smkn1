@@ -1,5 +1,6 @@
 @extends('template.main')
 @section('content')
+<div class="container">
     <h3 class="mt-4">Tambah Siswa</h3>
     <div class="row">
         <div class="col-lg-12 d-flex mx-auto">
@@ -99,4 +100,5 @@
             </form>
         </div>
     </div>
+</div>
 @endsection

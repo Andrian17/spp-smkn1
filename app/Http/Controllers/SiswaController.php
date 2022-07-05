@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
+use App\Models\Jurusan;
+use App\Models\Kelas;
+use App\Models\Alamat;
 use App\Http\Requests\StoreSiswaRequest;
 use App\Http\Requests\UpdateSiswaRequest;
 // use Barryvdh\DomPDF\PDF;
@@ -24,7 +27,15 @@ class SiswaController extends Controller
     public function index()
     {
         $siswa = Siswa::with('alamat')->where('user_id', auth()->user()->id)->first();
-        return view('siswa.siswaDetail', ['siswa' => $siswa, 'title' => 'Data Siswa']);
+        $jurusan = Jurusan::all();
+        $kelas = Kelas::all();
+
+        return view('siswa.siswaDetail', [
+            'siswa' => $siswa,
+            'jurusan' => $jurusan,
+            'kelas' => $kelas,
+            'title' => 'Data Siswa'
+        ]);
     }
 
     /**
@@ -82,13 +93,27 @@ class SiswaController extends Controller
     public function update(UpdateSiswaRequest $request, Siswa $siswa)
     {
         $valid = $request->validate([
-            "foto" => "image|file|max:2048"
+            'nama' => 'required',
+            'jenis_kelamin' => 'required',
+            'no_hp' => 'required',
+            'semester' => 'required',
+            'tanggal_lahir' => 'required',
+            'agama' => 'required',
+            'jurusan_id' => 'required',
+            'kelas_id' => 'required',
+            'angkatan' => 'required',
+            'alamat' => 'required',
+            'foto' => 'image|file|max:2048'
+        ]);
+        Alamat::where("siswa_id", $siswa->id)->update([
+            'alamat' => $valid["alamat"]
         ]);
         if ($request->hasFile('foto')) {
             $valid["foto"] = $request->foto->store('foto-siswa');
         }
         $siswa->update($valid);
-        return redirect('/siswa')->with('success', 'Foto siswa berhasil diubah');
+        return redirect('/siswa')
+            ->with('success', '<div class="alert alert-info" role="alert">Data siswa telah diperbarui</div>');
     }
 
     /**

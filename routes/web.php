@@ -35,6 +35,8 @@ Route::middleware('admin')->group(function () {
     Route::resource('/admin', AdminController::class)->middleware('admin');
     Route::get('/dashboard/getAllSiswa',  [AdminController::class, 'getAllSiswa'])->name('admin.allSiswa');
     Route::get('/tampilSiswa/{siswa}',  [AdminController::class, 'tampilSiswa'])->name('admin.tampilSiswa');
+    Route::get('/editSiswa/{siswa}',  [AdminController::class, 'editSiswa'])->name('admin.tampilSiswa');
+    Route::put('/updateSiswa/{siswa}',  [AdminController::class, 'updateSiswa'])->name('admin.tampilSiswa');
     Route::get('/dashboard/allPembayaran',  [AdminController::class, 'allPembayaran'])->name('admin.allPembayaran');
     Route::get('/dashboard/allJurusan',  [AdminController::class, 'allJurusan'])->name('admin.jurusan');
     Route::get('/dashboard/tampilJurusan/{jurusan}',  [AdminController::class, 'tampilJurusan'])->name('admin.tampilJurusan');

@@ -90,10 +90,13 @@ class JurusanController extends Controller
     public function update(UpdateJurusanRequest $request, Jurusan $jurusan)
     {
         // $jurusan->update($request->only('jurusan'));
-        dd($request->all());
-        $jurusan->jurusan = $request->jurusan;
-        $jurusan->save();
-        return redirect()->route('admin.index');
+        $valid = $request->validate([
+            "jurusan" => "required|unique:jurusans"
+        ]);
+        $jurusan->update($valid);
+        return redirect()
+            ->route('jurusan.index')
+            ->with('pesan', '<div class="alert alert-info" role="alert">Jurusan berhasil diperbarui</div>');
     }
 
     /**

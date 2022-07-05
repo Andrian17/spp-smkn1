@@ -227,4 +227,41 @@ class AdminController extends Controller
     {
         return view('admin.tampilSiswa', compact('siswa'));
     }
+
+    public function editSiswa(Siswa $siswa)
+    {
+        // dd($request);
+        // return "OKOKO";
+        // dd($siswa);
+        $jurusan = Jurusan::all();
+        $kelas = Kelas::all();
+        return view('admin.editSiswa', [
+            'siswa' => $siswa,
+            'kelas' => $kelas,
+            'jurusan' => $jurusan
+        ]);
+    }
+
+    public function updateSiswa(UpdateAdminRequest $request, Siswa $siswa)
+    {
+        $valid = $request->validate([
+            'nama' => 'required',
+            'jenis_kelamin' => 'required',
+            'no_hp' => 'required',
+            'semester' => 'required',
+            'tanggal_lahir' => 'required',
+            'agama' => 'required',
+            'jurusan_id' => 'required',
+            'kelas_id' => 'required',
+            'angkatan' => 'required',
+            'alamat' => 'required'
+        ]);
+        // dd($valid);
+        $siswa->update($valid);
+        Alamat::where("siswa_id", $siswa->id)->update([
+            'alamat' => $valid["alamat"]
+        ]);
+        // return redirect()
+        return redirect('/dashboard/getAllSiswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa telah diupdate </div>');
+    }
 }

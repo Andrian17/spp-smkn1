@@ -27,7 +27,8 @@
                             <td>{{ $s->nis }}</td>
                             <td>{{ $s->no_hp }}</td>
                             <td class="">
-                                <a class="text-decoration-none text-light btn btn-outline-warning bg-primary" href="/tampilSiswa/{{ $s->id }}">detail</a>
+                                <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-primary" href="/tampilSiswa/{{ $s->id }}">detail</a>
+                                <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-secondary" href="/editSiswa/{{ $s->id }}">edit</a>
                             </td>
                         </tr>
 
