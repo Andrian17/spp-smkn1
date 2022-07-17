@@ -1,4 +1,5 @@
 @extends('template.main')
+@section('title', $title)
 @section('content')
     <h1 class="mt-4">Data Siswa</h1>
     <div class="row">

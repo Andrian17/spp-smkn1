@@ -1,11 +1,11 @@
 @extends('template.main')
+@section('title', $title)
 @section('content')
     <h1 class="mt-4">Data Pembayaran</h1>
     <div class="row">
         <div class="col-lg-10">
             <div class="card mb-4">
                 <div class="d-block ms-auto">
-                    {{-- <a href="{{ route('admin.exportPDF') }}" class="btn btn-secondary">export pdf</a> --}}
                     <a href="{{ route('admin.exportExcell') }}" class="btn btn-success rounded-pill btn-sm text-decoration-none m-2" target="__blank"><i class="fa-solid fa-file-excel"></i> export excell <i class="fa-solid fa-file-export"></i></a>
                 </div>
                 <div class="card-header"><i class="fas fa-table mr-1"></i>Data Pembayaran</div>
@@ -31,10 +31,14 @@
                                     <td>{{ $s->nama }}</td>
                                     <td> {{ $s->kelas->kelas }}/{{ $s->jurusan->jurusan }}</td>
                                     <td>
-                                        @if ($s->utsPayments[0]->status_pembayaran == "success")
-                                            <span class="badge bg-success">lunas</span>
+                                        @if ($s->utsPayments)
+                                            @if ($s->utsPayments[0]->status_pembayaran == "success")
+                                                <span class="badge bg-success">lunas</span>
+                                            @else
+                                                <span class='badge bg-danger'>belum</span>
+                                            @endif
                                         @else
-                                            <span class='badge bg-danger'>belum</span>
+                                            <span>-</span>
                                         @endif
                                     </td>
                                     <td>

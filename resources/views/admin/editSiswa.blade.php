@@ -1,9 +1,10 @@
 @extends('template.main')
+@section('title', $title)
 @section('content')
 <div class="container">
-    <h3 class="mt-4">Tambah Siswa</h3>
+    <h3 class="mt-4">Edit Siswa</h3>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -20,13 +21,17 @@
                 @method('put')
                 @csrf
                 <div class="d-flex my-3">
-                    <div class="form-floating">
+                    <div class="form-floating w-50 p-2">
                         <input type="text" class="form-control form-control-lg" id="nama" name="nama" placeholder="Nama" value="{{ $siswa->nama }}">
                         <label for="nama">Nama</label>
                     </div>
+                    <div class="form-floating w-50 p-2">
+                        <input type="text" class="form-control form-control-lg" id="nis" name="nis" placeholder="nis" value="{{ $siswa->nis }}">
+                        <label for="nis">NIS</label>
+                    </div>
                 </div>
-                <div class="d-flex my-3 justify-content-between">
-                    <div class="form-floating">
+                <div class="d-flex my-3">
+                    <div class="form-floating w-50 p-2">
                         <select class="form-select" name="jenis_kelamin" aria-label="Jenis Kelamin">
                             @if ($siswa->jenis_kelamin == "Perempuan")
                             <option value="Perempuan" selected>Perempuan</option>
@@ -38,13 +43,13 @@
                         </select>
                         <label for="jenis_kelamin">Jenis Kelamin</label>
                     </div>
-                    <div class="form-floating">
+                    <div class="form-floating w-50 p-2">
                         <input type="date" class="form-control form-control-lg" id="tanggal_lahir" name="tanggal_lahir" placeholder="tanggal lahir" value="{{ $siswa->tanggal_lahir }}">
                         <label for="tanggal_lahir">Tanggal Lahir</label>
                     </div>
                 </div>
-                <div class="d-flex my-3 justify-content-between">
-                    <div class="form-floating">
+                <div class="d-flex my-3">
+                    <div class="form-floating flex-fill p-2">
                         <select class="form-select form-select-lg" id="kelas_id" name="kelas_id">
                             {{-- <option value="" selected>Pilih Kelas</option> --}}
                             @if ($siswa->kelas)
@@ -56,7 +61,7 @@
                         </select>
                         <label for="kelas_id">Kelas</label>
                     </div>
-                    <div class="form-floating">
+                    <div class="form-floating flex-fill p-2">
                         <select class="form-select" id="jurusan_id" name="jurusan_id">
                             {{-- <option value="" selected>Pilih Jurusan</option> --}}
                             @if ($siswa->jurusan)
@@ -68,23 +73,23 @@
                         </select>
                         <label for="jurusan_id">Jurusan</label>
                     </div>
-                    <div class="form-floating">
+                    <div class="form-floating flex-fill p-2">
                         <input type="text" class="form-control" id="agama" name="agama" placeholder="agama" value="{{ $siswa->agama }}">
                         <label for="agama">Agama</label>
                     </div>
                 </div>
-                <div class="form-floating ">
-                    <textarea class="form-control form-control-lg" id="alamat" name="alamat" rows="5" >
-                        {{ $siswa->alamat->alamat }}
-                    </textarea>
-                    <label for="alamat">Alamat</label>
+                <div class="d-flex my-3">
+                    <div class="form-floating flex-fill p-2">
+                        <textarea class="form-control form-control-lg" id="alamat" name="alamat" rows="5" >{{ $siswa->alamat->alamat }}</textarea>
+                        <label for="alamat">Alamat</label>
+                    </div>
                 </div>
-                <div class="d-flex my-3 justify-content-between">
-                    <div class="form-floating">
+                <div class="d-flex my-3">
+                    <div class="form-floating flex-fill p-2">
                         <input type="number" name="angkatan" id="angkatan" class="form-control d-block" value="{{ $siswa->angkatan }}">
                         <label for="angkatan">Tahun ajaran</label>
                     </div>
-                    <div class="form-floating">
+                    <div class="form-floating flex-fill p-2">
                         <select class="form-select form-select-lg" aria-label="Default select example" id="semester" name="semester">
                             {{-- <option selected value="">Semester</option> --}}
                             @if ($siswa->semester)
@@ -95,15 +100,13 @@
                         </select>
                         <label for="semester">semester</label>
                     </div>
-                </div>
-                <div class="d-flex my-3 justify-content-between">
-                    <div class="form-floating">
+                    <div class="form-floating flex-fill p-2">
                         <input type="text" class="form-control" id="no_hp" name="no_hp" value="{{ $siswa->no_hp }}">
                         <label for="no_hp">No HP</label>
                     </div>
                 </div>
-                <div class="d-flex my-3">
-                    <button type="submit" class="btn btn-primary mx-auto">Ubah</button>
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-primary btn-lg mx-auto">Ubah</button>
                 </div>
             </form>
         </div>

@@ -1,4 +1,5 @@
 @extends('template.main')
+@section('title', $title)
 @section('content')
     <h1 class="mt-4">Dashboard</h1>
     <ol class="breadcrumb mb-4">

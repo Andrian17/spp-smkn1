@@ -31,7 +31,14 @@ class JurusanController extends Controller
             'bg-secondary' => 'bg-secondary',
         ];
         // dd($jurusan);
-        return view('admin.jurusan', ["jurusan" => $jurusan, "style" => $style]);
+        return view(
+            'admin.jurusan',
+            [
+                "jurusan" => $jurusan,
+                "style" => $style,
+                "title" => "Data Jurusan"
+            ]
+        );
     }
 
     /**
@@ -65,7 +72,7 @@ class JurusanController extends Controller
     {
         // return response()->json($jurusan);
         $siswa = $jurusan->siswa;
-        return view('jurusan.editJurusan', ['jurusan' => $jurusan, 'siswa' => $siswa]);
+        return view('admin.editJurusan', ['jurusan' => $jurusan, 'siswa' => $siswa, 'title' => 'Edit Jurusan']);
     }
 
     /**

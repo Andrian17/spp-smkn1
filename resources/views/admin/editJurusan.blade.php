@@ -1,4 +1,5 @@
 @extends('template.main')
+@section('title', $title)
 @section('content')
     <h1 class="mt-4">Dashboard</h1>
     <ol class="breadcrumb mb-4">
@@ -40,7 +41,7 @@
                                     <td>{{ $s->nama }}</td>
                                     <td>{{ $jurusan->jurusan }}</td>
                                     <td>{{ $s->kelas->kelas }}</td>
-                                    <td>{{ $s->kelas->tahun_ajaran }}</td>
+                                    <td>{{ $s->angkatan }}</td>
                                     <td>
                                         <a href="/tampilSiswa/{{ $s->id }}" class="btn btn-primary">Detail</a>
                                     </td>

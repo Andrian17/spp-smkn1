@@ -40,7 +40,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('admin.adminDashboard');
+        return view('admin.adminDashboard', [
+            'title' => 'Dashboard'
+        ]);
     }
 
     /**
@@ -196,7 +198,10 @@ class AdminController extends Controller
             ->with('kelas')
             ->with('alamat')
             ->get();
-        return view('admin.allSiswa', compact('siswa'));
+        return view('admin.allSiswa', [
+            'siswa' => $siswa,
+            'title' => "Data Siswa"
+        ]);
     }
 
     // Semua Data Pembayaran
@@ -208,7 +213,10 @@ class AdminController extends Controller
             ->with('kelas')
             ->with('alamat')
             ->get();
-        return view('admin.allPembayaran', ['siswa' => $siswa]);
+        return view('admin.allPembayaran', [
+            'siswa' => $siswa,
+            'title' => 'Data Pembayaran'
+        ]);
     }
 
     // Semua Data Kelas
@@ -225,7 +233,10 @@ class AdminController extends Controller
 
     public function tampilSiswa(Siswa $siswa)
     {
-        return view('admin.tampilSiswa', compact('siswa'));
+        return view('admin.tampilSiswa', [
+            'siswa' => $siswa,
+            'title' => 'Detail Siswa'
+        ]);
     }
 
     public function editSiswa(Siswa $siswa)
@@ -238,7 +249,8 @@ class AdminController extends Controller
         return view('admin.editSiswa', [
             'siswa' => $siswa,
             'kelas' => $kelas,
-            'jurusan' => $jurusan
+            'jurusan' => $jurusan,
+            'title' => 'Edit Siswa'
         ]);
     }
 
