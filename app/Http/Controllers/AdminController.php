@@ -59,6 +59,7 @@ class AdminController extends Controller
         return view('admin.tambahSiswa', [
             'jurusan' => $jurusan,
             'kelas' => $kelas,
+            'title' => 'Tambah Siswa'
         ]);
     }
 
@@ -241,9 +242,7 @@ class AdminController extends Controller
 
     public function editSiswa(Siswa $siswa)
     {
-        // dd($request);
-        // return "OKOKO";
-        // dd($siswa);
+
         $jurusan = Jurusan::all();
         $kelas = Kelas::all();
         return view('admin.editSiswa', [

@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="card mx-auto mt-4 mb-4 rounded-top">
-                        <h6 class="bg-primary p-2 text-light rounded-top">Data Pembayaran</h6>
+                        <h6 class="bg-primary p-2 text-light rounded-top">Detail Pembayaran</h6>
                         <div class="d-flex">
                             <a href='/siswa/{{ $siswa->id }}' target='__blank' class="btn btn-info btn-sm rounded-pill m-2 text-decoration-none p-2"><i class="fa-solid fa-file-pdf"></i> Bukti pembayaran <i class="fa-solid fa-file-arrow-down"></i></a>
                         </div>
@@ -94,7 +94,7 @@
                                                         // Optional
                                                         onError: function (result) {
                                                             /* You may add your own js here, this is just example */
-                                                            console/log("Update")
+                                                            console.log("Update")
                                                             console.log(result);
                                                             fetch('/api/pembayaran/snapUAS', {
                                                                 method: 'PUT',
@@ -178,18 +178,21 @@
                                                         onSuccess: function (result) {
                                                         /* You may add your own js here, this is just example */
                                                         console.log(result);
+                                                        console.log("success");
                                                         location.reload();
                                                         },
                                                         // Optional
                                                         onPending: function (result) {
                                                         /* You may add your own js here, this is just example */
                                                         console.log(result);
+                                                        console.log("pending");
                                                         location.reload()
                                                         },
                                                         // Optional
                                                         onError: function (result) {
                                                         /* You may add your own js here, this is just example */
                                                             console.log(result);
+                                                            console.log("gagal");
                                                             fetch('/api/pembayaran/snapUTS', {
                                                                 method: 'PUT',
                                                                 headers: {

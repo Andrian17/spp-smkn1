@@ -16,6 +16,9 @@
       <title>Laporan Pembayaran</title>
    </head>
    <body>
+    <header>
+
+    </header>
     <div class='container'>
         <div class='row'>
             <div class='col-lg-12'>

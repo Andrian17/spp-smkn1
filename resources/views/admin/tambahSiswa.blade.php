@@ -1,9 +1,10 @@
 @extends('template.main')
+@section('title', $title)
 @section('content')
 <div class="container">
     <h3 class="mt-4">Tambah Siswa</h3>
     <div class="row">
-        <div class="col-lg-12 d-flex mx-auto">
+        <div class="col">
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -18,84 +19,83 @@
             @endif
             <form method="POST" action="{{ route('admin.store') }}" enctype="multipart/form-data" class="mx-auto">
                 @csrf
-                <div class="d-flex justify-content-between ">
-                    <div class="form-group mx-2 my-2">
-                        <label for="nis">NIS</label>
-                        <input type="number" class="form-control " id="nis" name="nis" placeholder="NIS">
-                    </div>
-                    <div class="form-group mx-2 my-2">
+                <div class="d-flex my-3">
+                    <div class="form-floating w-50 p-2">
+                        <input type="text" class="form-control form-control-lg" id="nama" name="nama" placeholder="Nama">
                         <label for="nama">Nama</label>
-                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama">
+                    </div>
+                    <div class="form-floating w-50 p-2">
+                        <input type="text" class="form-control form-control-lg" id="nis" name="nis" placeholder="nis">
+                        <label for="nis">NIS</label>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center">
-                    <div class="form-group mx-4 my-2">
-                        <label for="jenis_kelamin">Jenis Kelamin</label>
-                        <select class="form-select form-select-sm" name="jenis_kelamin" aria-label=".form-select-sm example">
-                            <option selected>Pilih</option>
+                <div class="d-flex my-3">
+                    <div class="form-floating w-50 p-2">
+                        <select class="form-select" name="jenis_kelamin" aria-label="Jenis Kelamin">
                             <option value="Laki-Laki">Laki-Laki</option>
                             <option value="Perempuan">Perempuan</option>
                         </select>
+                        <label for="jenis_kelamin">Jenis Kelamin</label>
                     </div>
-                    <div class="form-group mx-4 my-2">
+                    <div class="form-floating w-50 p-2">
+                        <input type="date" class="form-control form-control-lg" id="tanggal_lahir" name="tanggal_lahir" placeholder="tanggal lahir">
                         <label for="tanggal_lahir">Tanggal Lahir</label>
-                        <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="tanggal lahir">
                     </div>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <div class="form-group mx-2 my-2">
-                        <label for="kelas_id">Kelas</label>
-                        <select class="form-select" id="kelas_id" name="kelas_id">
-                            <option value="" selected>Pilih Kelas</option>
+                <div class="d-flex my-3">
+                    <div class="form-floating flex-fill p-2">
+                        <select class="form-select form-select-lg" id="kelas_id" name="kelas_id">
                             @foreach ($kelas as $item)
-                                <option value="{{ $item->id }}">{{ $item->kelas }}</option>
+                            <option value="{{ $item->id }}">{{ $item->kelas }}</option>
                             @endforeach
                         </select>
+                        <label for="kelas_id">Kelas</label>
                     </div>
-                    <div class="form-group mx-2 my-2">
-                        <label for="jurusan_id">Jurusan</label>
+                    <div class="form-floating flex-fill p-2">
                         <select class="form-select" id="jurusan_id" name="jurusan_id">
-                            <option value="" selected>Pilih Jurusan</option>
                             @foreach ($jurusan as $item)
-                                <option value="{{ $item->id }}">{{ $item->jurusan }}</option>
+                            <option value="{{ $item->id }}">{{ $item->jurusan }}</option>
                             @endforeach
                         </select>
+                        <label for="jurusan_id">Jurusan</label>
                     </div>
-                    <div class="form-group mx-2 my-2">
-                        <label for="agama">Agama</label>
+                    <div class="form-floating flex-fill p-2">
                         <input type="text" class="form-control" id="agama" name="agama" placeholder="agama">
+                        <label for="agama">Agama</label>
                     </div>
                 </div>
-                <div class="form-group mx-2 my-2">
-                    <label for="alamat">Alamat</label>
-                    <textarea class="form-control" id="alamat" name="alamat" rows="3"></textarea>
+                <div class="d-flex my-3">
+                    <div class="form-floating flex-fill p-2">
+                        <textarea class="form-control form-control-lg" id="alamat" name="alamat" rows="5" ></textarea>
+                        <label for="alamat">Alamat</label>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-center">
-                    <div class="form-group mx-2 my-2">
+                <div class="d-flex my-3">
+                    <div class="form-floating flex-fill p-2">
+                        <input type="number" name="angkatan" id="angkatan" class="form-control d-block">
                         <label for="angkatan">Tahun ajaran</label>
-                        <input type="number" name="angkatan" id="angkatan" class="form-control d-block" placeholder="Angkatan">
                     </div>
-                    <div class="form-group mx-2 my-2">
+                    <div class="form-floating flex-fill p-2">
+                        <select class="form-select form-select-lg" aria-label="Default select example" id="semester" name="semester">
+
+                            <option value="1">1  </option>
+                            <option value="2">2  </option>
+                        </select>
                         <label for="semester">semester</label>
-                        <select class="form-select" aria-label="Default select example" id="semester" name="semester">
-                            <option selected value="">Semester</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                          </select>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <div class="form-group mx-2 my-2">
+                <div class="d-flex my-3">
+                    <div class="form-floating flex-fill p-2">
+                        <input type="text" class="form-control" id="no_hp" name="no_hp">
                         <label for="no_hp">No HP</label>
-                        <input type="number" class="form-control" id="no_hp" name="no_hp" placeholder="No HP">
                     </div>
-                    <div class="form-group mx-2 my-2">
+                    <div class="form-floating flex-fill p-2">
+                        <input type="email" class="form-control" id="email" name="email">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
                     </div>
                 </div>
                 <div class="d-flex">
-                    <button type="submit" class="btn btn-primary mx-auto">Tambah</button>
+                    <button type="submit" class="btn btn-primary btn-lg mx-auto">Tambah</button>
                 </div>
             </form>
         </div>

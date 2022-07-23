@@ -26,7 +26,7 @@
                         <label for="nama">Nama</label>
                     </div>
                     <div class="form-floating w-50 p-2">
-                        <input type="text" class="form-control form-control-lg" id="nis" name="nis" placeholder="nis" value="{{ $siswa->nis }}">
+                        <input readonly type="text" class="form-control form-control-lg" id="nis" name="nis" placeholder="nis" value="{{ $siswa->nis }}">
                         <label for="nis">NIS</label>
                     </div>
                 </div>
