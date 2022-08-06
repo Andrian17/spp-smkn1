@@ -12,26 +12,22 @@
          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
          crossorigin="anonymous"
       />
-
       <title>Laporan Pembayaran</title>
    </head>
    <body>
-    <header>
-
-    </header>
     <div class='container'>
         <div class='row'>
             <div class='col-lg-12'>
-                <h3>Profil Siswa</h3>
                 <div class='jumbotron'>
                     <div class="card mx-auto rounded-top">
-                        <h6 class="bg-primary p-2 text-light rounded-top">Detail Data Siswa</h6>
-                        <div class="d-flex justify-content-center">
+                        <img src="{{ public_path() . '/storage/kopsmk.png' }}" alt="kop-smk" style="width: 100%; max-height: 120px;">
+                        <h6 class="bg-secondary p-2 text-light rounded-top">Detail Siswa</h6>
+                        <div class="d-flex">
                             <div class="d-flex">
-                                <img src="{{ asset('storage/' . $siswa->foto) }}" class="card-img-top justify-content-center mx-auto border border-success p-1 mt-2 ms-2 " alt="{{ $siswa->nama }}" style="height: 100%; max-height: 160px;  width: 100%; max-width: 120px">
+                                <img src="{{ public_path() . '/storage/' . $siswa->foto }}" class="card-img-top border border-secondary p-sm-0 justify-content-center" alt="{{ $siswa->nama }}" style="height: 100%; max-height: 160px;  width: 100%; max-width: 120px">
                             </div>
                             <div class="flex-fill">
-                                <div class="card-body rounded-top mx-auto ">
+                                <div class="card-body rounded-top">
                                   <table class="table">
                                     <tbody>
                                         <tr>
@@ -68,7 +64,7 @@
                     <div class="card mx-auto mt-4 mb-4 rounded-top">
                         <h6 class="bg-primary p-2 text-light rounded-top">Data Pembayaran</h6>
                         <div class="d-flex card-body">
-                            <div class="flex-fill p-3 border border-info">
+                            <div class="flex-fill p-3 border border-secondary">
                                 <table class='table'>
                                     <tbody>
                                         @foreach ($siswa->uasPayments as $payment)
@@ -82,7 +78,6 @@
                                           <td>:</td>
                                           <td>
                                               <span>{{ $payment->jenis_pembayaran }}</span>
-
                                           </td>
                                         </tr>
                                         <tr>
@@ -111,7 +106,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="flex-fill p-3 border border-info">
+                            <div class="flex-fill p-3 border border-secondary">
                                 <table class="table">
                                     <tbody>
                                         @foreach ($siswa->utsPayments as $payment)

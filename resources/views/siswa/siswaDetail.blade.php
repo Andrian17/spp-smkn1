@@ -8,6 +8,15 @@
                 @if (session()->has('success'))
                     {!! session('success') !!}
                 @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="jumbotron d-flex " id="detailSiswa">
                     <div class="card mx-auto rounded-top flex-grow-1">
                         <h6 class="bg-primary p-2 text-light rounded-top">Detail Data Siswa</h6>
@@ -51,6 +60,7 @@
                                     <td>:</td>
                                     <td>{{ $siswa->alamat->alamat }}</td>
                                   </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -88,7 +98,7 @@
                         @csrf()
                         <div class="d-flex my-3">
                             <div class="form-floating w-50 p-2">
-                                <input type="text" class="form-control form-control-lg" id="nama" name="nama" placeholder="Nama" value="{{ $siswa->nama }}">
+                                <input type="text" class="form-control form-control-lg" id="nama" name="nama" placeholder="Nama" value="{{ $siswa->nama }}" required>
                                 <label for="nama">Nama</label>
                             </div>
                             <div class="form-floating w-50 p-2">
@@ -140,7 +150,7 @@
                                 <label for="jurusan_id">Jurusan</label>
                             </div>
                             <div class="form-floating flex-fill p-2">
-                                <input type="text" class="form-control" id="agama" name="agama" placeholder="agama" value="{{ $siswa->agama }}">
+                                <input type="text" class="form-control" id="agama" name="agama" placeholder="agama" value="{{ $siswa->agama }}" required>
                                 <label for="agama">Agama</label>
                             </div>
                         </div>
@@ -152,7 +162,7 @@
                         </div>
                         <div class="d-flex my-3">
                             <div class="form-floating flex-fill p-2">
-                                <input type="number" name="angkatan" id="angkatan" class="form-control d-block" value="{{ $siswa->angkatan }}">
+                                <input type="number" name="angkatan" id="angkatan" class="form-control d-block" value="{{ $siswa->angkatan }}" required>
                                 <label for="angkatan">Tahun ajaran</label>
                             </div>
                             <div class="form-floating flex-fill p-2">
@@ -167,7 +177,7 @@
                                 <label for="semester">semester</label>
                             </div>
                             <div class="form-floating flex-fill p-2">
-                                <input type="text" class="form-control" id="no_hp" name="no_hp" value="{{ $siswa->no_hp }}">
+                                <input type="text" class="form-control" id="no_hp" name="no_hp" value="{{ $siswa->no_hp }}" required>
                                 <label for="no_hp">No HP</label>
                             </div>
                         </div>

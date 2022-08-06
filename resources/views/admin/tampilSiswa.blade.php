@@ -45,9 +45,19 @@
                                     <td>{{$siswa->no_hp}}</td>
                                 </tr>
                                 <tr>
-                                    <td>Alamat Lengkap</td>
+                                    <td>Email</td>
+                                    <td>:</td>
+                                    <td>{{$siswa->user->email}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat</td>
                                     <td>:</td>
                                     <td>{{ $siswa->alamat->alamat }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kelas / Jurusan</td>
+                                    <td>:</td>
+                                    <td> {{ $siswa->kelas->kelas }} / {{ $siswa->jurusan->jurusan }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -62,9 +72,9 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="card mx-auto d-flex" style="width: 100%;">
-                            <div class="card-body">
+                            <div class="card-body border border-secondary">
                                 <h6>Jumlah yang dibayarkan</h6>
-                                <p class="card-text">Rp. {{ $siswa->utsPayments[0]->nominal_pembayaran }}</p>
+                                <p class="card-text">@currency($siswa->utsPayments[0]->nominal_pembayaran)</p>
                                 <h5 class="card-title">UTS</h5>
                                 <p class="card-text">
                                     @if ($siswa->utsPayments[0]->status_pembayaran == "success")
@@ -81,9 +91,9 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="card mx-auto d-flex" style="width: 100%;">
-                            <div class="card-body">
+                            <div class="card-body border border-secondary">
                                 <h6>Jumlah yang dibayarkan</h6>
-                                <p class="card-text">Rp. {{ $siswa->uasPayments[0]->nominal_pembayaran }}</p>
+                                <p class="card-text">@currency($siswa->uasPayments[0]->nominal_pembayaran)</p>
                                 <h5 class="card-title">UAS</h5>
                                 <p class="card-text">
                                     @if ($siswa->uasPayments[0]->status_pembayaran == "success")

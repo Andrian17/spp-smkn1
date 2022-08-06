@@ -21,11 +21,11 @@
                 @csrf
                 <div class="d-flex my-3">
                     <div class="form-floating w-50 p-2">
-                        <input type="text" class="form-control form-control-lg" id="nama" name="nama" placeholder="Nama">
+                        <input type="text" class="form-control form-control-lg" id="nama" name="nama" placeholder="Nama" required>
                         <label for="nama">Nama</label>
                     </div>
                     <div class="form-floating w-50 p-2">
-                        <input type="text" class="form-control form-control-lg" id="nis" name="nis" placeholder="nis">
+                        <input type="text" class="form-control form-control-lg" id="nis" name="nis" placeholder="nis" required>
                         <label for="nis">NIS</label>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         <label for="jurusan_id">Jurusan</label>
                     </div>
                     <div class="form-floating flex-fill p-2">
-                        <input type="text" class="form-control" id="agama" name="agama" placeholder="agama">
+                        <input type="text" required class="form-control" id="agama" name="agama" placeholder="agama">
                         <label for="agama">Agama</label>
                     </div>
                 </div>
@@ -86,11 +86,11 @@
                 </div>
                 <div class="d-flex my-3">
                     <div class="form-floating flex-fill p-2">
-                        <input type="text" class="form-control" id="no_hp" name="no_hp">
+                        <input type="text" required class="form-control" id="no_hp" name="no_hp">
                         <label for="no_hp">No HP</label>
                     </div>
                     <div class="form-floating flex-fill p-2">
-                        <input type="email" class="form-control" id="email" name="email">
+                        <input type="email" class="form-control" id="email" name="email" required>
                         <label for="email">Email</label>
                     </div>
                 </div>

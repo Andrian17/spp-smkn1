@@ -10,7 +10,7 @@
                 <h3>Profil Siswa</h3>
                 <div class='jumbotron'>
                     <div class="card mx-auto rounded-top">
-                        <h6 class="bg-primary p-2 text-light rounded-top">Detail Data Siswa</h6>
+                        <h6 class="bg-primary p-2 text-light rounded-top">Detail Siswa</h6>
                         <div class="d-flex ">
                             <div class="">
                                 <img src="{{ asset('storage/' . $siswa->foto) }}" class="card-img-top mx-auto border border-success p-1 mt-2 ms-2" alt="{{ $siswa->nama }}" style="height: 100%; max-height: 200px;  width: 100%;">
@@ -56,14 +56,109 @@
                             <a href='/siswa/{{ $siswa->id }}' target='__blank' class="btn btn-info btn-sm rounded-pill m-2 text-decoration-none p-2"><i class="fa-solid fa-file-pdf"></i> Bukti pembayaran <i class="fa-solid fa-file-arrow-down"></i></a>
                         </div>
                         <div class="d-flex card-body">
-                            <div class="flex-fill p-3 border border-info">
+                            <div class="flex-fill p-3 border border-secondary">
+                                <table class="table">
+                                    <tbody>
+                                        @foreach ($siswa->utsPayments as $payment)
+                                        <tr>
+                                          <td scope='row'>Jumlah</td>
+                                          <td>:</td>
+                                          <td>@currency($payment->nominal_pembayaran)</td>
+                                        </tr>
+                                        <tr>
+                                          <td scope='row'>Pembayaran</td>
+                                          <td>:</td>
+                                          <td>
+                                              <span>{{ $payment->jenis_pembayaran }}</span>
+                                            @if ($payment->status_pembayaran != 'success')
+                                              <button id='{{ $payment->jenis_pembayaran }}' class='btn btn-success text-light btn-sm ms-3'>bayar</button>
+                                                <script>
+                                                    const clickSnap2 = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
+                                                    clickSnap2.addEventListener('click', (event) => {
+                                                    event.preventDefault();
+                                                    // SnapToken acquired from previous step
+                                                    snap.pay('{{ $payment->snap_token }}', {
+                                                        // Optional
+                                                        onSuccess: function (result) {
+                                                        /* You may add your own js here, this is just example */
+                                                        console.log(result);
+                                                        console.log("success");
+                                                        location.reload();
+                                                        },
+                                                        // Optional
+                                                        onPending: function (result) {
+                                                        /* You may add your own js here, this is just example */
+                                                        console.log(result);
+                                                        console.log("pending");
+                                                        location.reload()
+                                                        },
+                                                        // Optional
+                                                        onError: function (result) {
+                                                        /* You may add your own js here, this is just example */
+                                                            console.log(result);
+                                                            console.log("gagal");
+                                                            fetch('/api/pembayaran/snapUTS', {
+                                                                method: 'PUT',
+                                                                headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                                },
+                                                                body: JSON.stringify({
+                                                                _csrf: '{{ csrf_token() }}',
+                                                                id : '{{ $payment->id }}',
+                                                                nama : '{{ $siswa->nama }}',
+                                                                no_hp : '{{ $siswa->no_hp }}',
+                                                                nis : '{{ $siswa->nis }}',
+                                                                order_id : '{{ 'spp-'.uniqid() }}',
+                                                                nominal_pembayaran : '{{ $payment->nominal_pembayaran }}',
+                                                                })
+                                                            }).then((result) => {
+                                                                return result.json()
+                                                            }).catch((err) => {
+                                                                console.log(err);
+                                                            });
+                                                            location.reload()
+                                                        }
+                                                    });
+                                                });
+                                                </script>
+                                             @endif
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td scope='row'>Status Pembayaran</td>
+                                          <td>:</td>
+                                          <td>
+                                            @if ($payment->status_pembayaran == 'success')
+                                                <span class='badge bg-success'>Lunas</span>
+                                            @else
+                                                <span class='badge bg-danger text-dark'>Belum Lunas</span>
+                                            @endif
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tanggal Pembayaran</td>
+                                            <td>:</td>
+                                            <td>
+                                                @if ($payment->status_pembayaran == 'success')
+                                                    <p>{{ $payment->updated_at }}</p>
+                                                @else
+                                                    <p>-</p>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="flex-fill p-3 border border-secondary">
                                 <table class='table'>
                                     <tbody>
                                         @foreach ($siswa->uasPayments as $payment)
                                         <tr>
                                           <td scope='row'>Jumlah</td>
                                           <td>:</td>
-                                          <td>Rp. {{ $payment->nominal_pembayaran }}</td>
+                                          <td>@currency($payment->nominal_pembayaran)</td>
                                         </tr>
                                         <tr>
                                           <td scope='row'>Pembayaran</td>
@@ -152,101 +247,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="flex-fill p-3 border border-info">
-                                <table class="table">
-                                    <tbody>
-                                        @foreach ($siswa->utsPayments as $payment)
-                                        <tr>
-                                          <td scope='row'>Jumlah</td>
-                                          <td>:</td>
-                                          <td>Rp. {{ $payment->nominal_pembayaran }}</td>
-                                        </tr>
-                                        <tr>
-                                          <td scope='row'>Pembayaran</td>
-                                          <td>:</td>
-                                          <td>
-                                              <span>{{ $payment->jenis_pembayaran }}</span>
-                                            @if ($payment->status_pembayaran != 'success')
-                                              <button id='{{ $payment->jenis_pembayaran }}' class='btn btn-success text-light btn-sm ms-3'>bayar</button>
-                                                <script>
-                                                    const clickSnap2 = document.querySelector(' #{{ $payment->jenis_pembayaran }} ');
-                                                    clickSnap2.addEventListener('click', (event) => {
-                                                    event.preventDefault();
-                                                    // SnapToken acquired from previous step
-                                                    snap.pay('{{ $payment->snap_token }}', {
-                                                        // Optional
-                                                        onSuccess: function (result) {
-                                                        /* You may add your own js here, this is just example */
-                                                        console.log(result);
-                                                        console.log("success");
-                                                        location.reload();
-                                                        },
-                                                        // Optional
-                                                        onPending: function (result) {
-                                                        /* You may add your own js here, this is just example */
-                                                        console.log(result);
-                                                        console.log("pending");
-                                                        location.reload()
-                                                        },
-                                                        // Optional
-                                                        onError: function (result) {
-                                                        /* You may add your own js here, this is just example */
-                                                            console.log(result);
-                                                            console.log("gagal");
-                                                            fetch('/api/pembayaran/snapUTS', {
-                                                                method: 'PUT',
-                                                                headers: {
-                                                                'Content-Type': 'application/json',
-                                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                                                },
-                                                                body: JSON.stringify({
-                                                                _csrf: '{{ csrf_token() }}',
-                                                                id : '{{ $payment->id }}',
-                                                                nama : '{{ $siswa->nama }}',
-                                                                no_hp : '{{ $siswa->no_hp }}',
-                                                                nis : '{{ $siswa->nis }}',
-                                                                order_id : '{{ $payment->order_id }}',
-                                                                nominal_pembayaran : '{{ $payment->nominal_pembayaran }}',
-                                                                })
-                                                            }).then((result) => {
-                                                                return result.json()
-                                                            }).catch((err) => {
-                                                                console.log(err);
-                                                            });
-                                                            location.reload()
-                                                        }
-                                                    });
-                                                });
-                                                </script>
-                                             @endif
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td scope='row'>Status Pembayaran</td>
-                                          <td>:</td>
-                                          <td>
-                                            @if ($payment->status_pembayaran == 'success')
-                                                <span class='badge bg-success'>Lunas</span>
-                                            @else
-                                                <span class='badge bg-danger text-dark'>Belum Lunas</span>
-                                            @endif
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tanggal Pembayaran</td>
-                                            <td>:</td>
-                                            <td>
-                                                @if ($payment->status_pembayaran == 'success')
-                                                    <p>{{ $payment->updated_at }}</p>
-                                                @else
-                                                    <p>-</p>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+
                         </div>
                     </div>
                 </div>

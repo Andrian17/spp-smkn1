@@ -10,6 +10,7 @@ use App\Http\Requests\StoreSiswaRequest;
 use App\Http\Requests\UpdateSiswaRequest;
 // use Barryvdh\DomPDF\PDF;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Carbon;
 
 class SiswaController extends Controller
 {
@@ -68,8 +69,9 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa)
     {
-        $pdf = PDF::loadView('pdf.laporanSiswa', ['siswa' => $siswa, 'title' => 'Laporan Pembayaran']);
-        return $pdf->stream('laporan-siswa.pdf');
+        // $pdf = PDF::loadView('pdf.laporanSiswa', ['siswa' => $siswa, 'title' => 'Laporan Pembayaran']);
+        // return $pdf->stream('laporan-siswa.pdf');
+        return view('pdf.laporanSiswa', ['siswa' => $siswa, 'title' => 'Laporan Pembayaran']);
     }
 
     /**
@@ -81,6 +83,23 @@ class SiswaController extends Controller
     public function edit(Siswa $siswa)
     {
         //
+    }
+
+    // Cek Pebedaan Tanggal
+    public function checkPerbedaanTanggal($startDate)
+    {
+        //parse string to dateTIme Carbon
+        $startDate = Carbon::parse($startDate);
+        $now = Carbon::parse(Carbon::now()->format('Y-m-d'));
+
+        //selisih waktu sekarang dengan tanggal mulai
+        $dayDifference = $now->diffInDays($startDate, false);
+
+        // dd($dayDifference);
+        if ($dayDifference < 1) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -105,15 +124,21 @@ class SiswaController extends Controller
             'alamat' => 'required',
             'foto' => 'image|file|max:2048'
         ]);
-        Alamat::where("siswa_id", $siswa->id)->update([
-            'alamat' => $valid["alamat"]
-        ]);
-        if ($request->hasFile('foto')) {
-            $valid["foto"] = $request->foto->store('foto-siswa');
+
+        $validTanggal = $this->checkPerbedaanTanggal($valid["tanggal_lahir"]);
+        if ($validTanggal) {
+            Alamat::where("siswa_id", $siswa->id)->update([
+                'alamat' => $valid["alamat"]
+            ]);
+            if ($request->hasFile('foto')) {
+                $valid["foto"] = $request->foto->store('foto-siswa');
+            }
+            $siswa->update($valid);
+            return redirect('/siswa')
+                ->with('success', '<div class="alert alert-info" role="alert">Data siswa telah diperbarui</div>');
         }
-        $siswa->update($valid);
         return redirect('/siswa')
-            ->with('success', '<div class="alert alert-info" role="alert">Data siswa telah diperbarui</div>');
+            ->with('success', '<div class="alert alert-danger" role="alert">Data siswa gagal diperbarui, Cek Kembali Data anda!</div>');
     }
 
     /**
