@@ -16,6 +16,7 @@ class CreateSnapToken extends Midtrans
 
     public function getSnapToken()
     {
+        // dd($this->data);
         $params = [
             'transaction_details' => [
                 'order_id' =>  $this->data->order_id,
@@ -26,12 +27,12 @@ class CreateSnapToken extends Midtrans
                     'id' => 1, // primary key produk
                     'price' => $this->data->nominal_pembayaran, // harga satuan produk
                     'quantity' => 1, // kuantitas pembelian
-                    'name' => 'and-' . ucwords(str_replace('_', ' ', $this->data->nama_siswa)) // nama produk
+                    'name' => $this->data->jenis_pembayaran == 'mid-semester' ? "uts-" . ucwords(str_replace('_', ' ', $this->data->nama_siswa)) : "uas-" . ucwords(str_replace('_', ' ', $this->data->nama_siswa)) // nama produk
                 ],
             ],
             'customer_details' => [
                 'first_name'    => $this->data->nama_siswa,
-                'email'         => "siswa@gmail.com",
+                'email'         => $this->data->email,
                 'phone' => $this->data->no_hp,
             ],
         ];

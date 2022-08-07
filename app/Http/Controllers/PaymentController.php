@@ -9,6 +9,7 @@ use App\Models\Siswa;
 use App\Models\UasPayment;
 use App\Models\UtsPayment;
 use App\Services\Midtrans\CreateSnapToken;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
@@ -36,6 +37,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
+        // dd(auth()->user()->email);
         $this->_createSnapToken();
 
         $siswa = Siswa::where('user_id', auth()->user()->id)
@@ -62,11 +64,12 @@ class PaymentController extends Controller
                 $key["nama_siswa"] = $siswa->nama;
                 $key["no_hp"] = $siswa->no_hp;
                 $key["nis"] = $siswa->nis;
+                $key["email"] = auth()->user()->email;
+                // $key["jenis_pembayaran"] = $siswa->uasPayments->jenis_pembayaran;
 
                 DB::transaction(function () use ($key) {
                     $midtrans = new CreateSnapToken($key);
                     $snapToken = $midtrans->getSnapToken();
-
                     // update
                     UasPayment::where('id', $key->id)->update(['snap_token' => $snapToken]);
                 });
@@ -78,11 +81,12 @@ class PaymentController extends Controller
                 $key["nama_siswa"] = $siswa->nama;
                 $key["no_hp"] = $siswa->no_hp;
                 $key["nis"] = $siswa->nis;
+                $key["email"] = auth()->user()->email;
+                // $key["jenis_pembayaran"] = $siswa->utsPayments->jenis_pembayaran;
 
                 DB::transaction(function () use ($key) {
                     $midtrans = new CreateSnapToken($key);
                     $snapToken = $midtrans->getSnapToken();
-
                     // update
                     UtsPayment::where('id', $key->id)->update(['snap_token' => $snapToken]);
                 });

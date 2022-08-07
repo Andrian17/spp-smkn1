@@ -69,9 +69,9 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa)
     {
-        // $pdf = PDF::loadView('pdf.laporanSiswa', ['siswa' => $siswa, 'title' => 'Laporan Pembayaran']);
-        // return $pdf->stream('laporan-siswa.pdf');
-        return view('pdf.laporanSiswa', ['siswa' => $siswa, 'title' => 'Laporan Pembayaran']);
+        $pdf = PDF::loadView('pdf.laporanSiswa', ['siswa' => $siswa, 'title' => 'Laporan Pembayaran']);
+        return $pdf->stream('laporan-siswa.pdf');
+        // return view('pdf.laporanSiswa', ['siswa' => $siswa, 'title' => 'Laporan Pembayaran']);
     }
 
     /**
