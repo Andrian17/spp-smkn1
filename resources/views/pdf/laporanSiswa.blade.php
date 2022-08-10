@@ -65,9 +65,9 @@
                         <h6 class="bg-primary p-2 text-light rounded-top">Data Pembayaran</h6>
                         <div class="d-flex card-body">
                             <div class="flex-fill p-3 border border-secondary">
-                                <table class='table'>
+                                <table class="table">
                                     <tbody>
-                                        @foreach ($siswa->uasPayments as $payment)
+                                        @foreach ($siswa->utsPayments as $payment)
                                         <tr>
                                           <td scope='row'>Jumlah</td>
                                           <td>:</td>
@@ -78,6 +78,7 @@
                                           <td>:</td>
                                           <td>
                                               <span>{{ $payment->jenis_pembayaran }}</span>
+
                                           </td>
                                         </tr>
                                         <tr>
@@ -107,9 +108,9 @@
                                 </table>
                             </div>
                             <div class="flex-fill p-3 border border-secondary">
-                                <table class="table">
+                                <table class='table'>
                                     <tbody>
-                                        @foreach ($siswa->utsPayments as $payment)
+                                        @foreach ($siswa->uasPayments as $payment)
                                         <tr>
                                           <td scope='row'>Jumlah</td>
                                           <td>:</td>
@@ -120,7 +121,6 @@
                                           <td>:</td>
                                           <td>
                                               <span>{{ $payment->jenis_pembayaran }}</span>
-
                                           </td>
                                         </tr>
                                         <tr>

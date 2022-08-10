@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SiswaController;
+use App\Models\UtsPayment;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,9 +39,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/editSiswa/{siswa}',  [AdminController::class, 'editSiswa'])->name('admin.tampilSiswa');
     Route::put('/updateSiswa/{siswa}',  [AdminController::class, 'updateSiswa'])->name('admin.tampilSiswa');
     Route::get('/dashboard/allPembayaran',  [AdminController::class, 'allPembayaran'])->name('admin.allPembayaran');
-    Route::get('/dashboard/allJurusan',  [AdminController::class, 'allJurusan'])->name('admin.jurusan');
-    Route::get('/dashboard/tampilJurusan/{jurusan}',  [AdminController::class, 'tampilJurusan'])->name('admin.tampilJurusan');
-    Route::put('/dashboard/editJurusan/{jurusan}',  [AdminController::class, 'editJurusan'])->name('admin.editJurusan');
+
     // PDF
     Route::get('/dashboard/exportExcell',  [AdminController::class, 'exportExcell'])->name('admin.exportExcell');
     Route::get('/dashboard/exportPDF',  [AdminController::class, 'exportPDF'])->name('admin.exportPDF');

@@ -198,7 +198,7 @@ class AdminController extends Controller
             ->with('jurusan')
             ->with('kelas')
             ->with('alamat')
-            ->get();
+            ->latest()->get();
         return view('admin.allSiswa', [
             'siswa' => $siswa,
             'title' => "Data Siswa"

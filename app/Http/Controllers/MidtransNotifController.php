@@ -6,7 +6,9 @@ use App\Models\UasPayment;
 use App\Models\UtsPayment;
 use App\Services\Midtrans\CreateSnapToken;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class MidtransNotifController extends Controller
 {
@@ -113,7 +115,7 @@ class MidtransNotifController extends Controller
                 $utsPay->save();
             }
         }
-        return;
+        return response()->json('', 200, ['status' => 'success']);
     }
 
     public function updateSnapUTS(Request $request)
