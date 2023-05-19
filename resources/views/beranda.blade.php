@@ -21,7 +21,7 @@
         <nav class="navbar navbar-expand-lg p-3 " style="background-color: rgb(153, 249, 201)">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="{{ asset('storage/smkn1.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
+                    <img src="{{ asset('storage/logo_smkn_1_shadow.png') }}" alt="logo-smkn1" width="30" height="30" class="d-inline-block align-text-top">
                     SMKN1
                   </a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +42,7 @@
               </div>
             </div>
           </nav>
-          <div id="heroImage" style="background-image: url('{{ asset('storage/smkn1kobi.jpg') }}');">
+          <div id="heroImage" style="background-image: url('{{ asset('storage/bg-SMKN1.jpg') }}');">
               <div class="row">
                   <div  class="col-lg-12" >
                   </div>

@@ -19,10 +19,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-// Route::post('/pembayaran', [PaymentController::class, 'store'])->middleware('auth');
-
 Route::post('/pembayaran/notification',  [MidtransNotifController::class, 'notification']);
-Route::put('/pembayaran/snapUAS',  [MidtransNotifController::class, 'updateSnapUAS'])->name('updateSnap.updateUAS');
-Route::put('/pembayaran/snapUTS',  [MidtransNotifController::class, 'updateSnapUTS'])->name('updateSnap.updateUTS');
-// Route::get('/pembayaran/notification', [MidtransNotifController::class, 'coba']);
+Route::put('/pembayaran/updateSnap',  [MidtransNotifController::class, 'updateSnap'])->name('updateSnap.updateUTS');

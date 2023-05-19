@@ -82,7 +82,9 @@ class SiswaController extends Controller
      */
     public function edit(Siswa $siswa)
     {
-        //
+        $kelas = Kelas::all();
+        $jurusan = Jurusan::all();
+        return view('siswa.editSiswa', ["siswa" => $siswa, "kelas" => $kelas, "jurusan" => $jurusan]);
     }
 
     // Cek Pebedaan Tanggal

@@ -118,26 +118,68 @@ class MidtransNotifController extends Controller
         return response()->json('', 200, ['status' => 'success']);
     }
 
-    public function updateSnapUTS(Request $request)
+    public function updateSnap(Request $request)
     {
-        $request['order_id'] = 'spp-' . uniqid();
-        DB::transaction(function () use ($request) {
-            $midtrans = new CreateSnapToken($request);
-            $snapToken = $midtrans->getSnapToken();
-
-            // update
-            UtsPayment::where('id', $request->id)->update(['order_id' => $request->order_id, 'snap_token' => $snapToken]);
-        });
+        $paymentType = $request->input("payment_type");
+        $oldSnapToken = $request->input("old_snap_token");
+        $this->updateSnapToken($paymentType, $oldSnapToken);
+        return response()->json([
+            "message" => "snap token generated!"
+        ]);
     }
-    public function updateSnapUAS(Request $request)
-    {
-        $request['order_id'] = 'spp-' . uniqid();
-        DB::transaction(function () use ($request) {
-            $midtrans = new CreateSnapToken($request);
-            $snapToken = $midtrans->getSnapToken();
 
-            // update
-            UasPayment::where('id', $request->id)->update(['order_id' => $request->order_id, 'snap_token' => $snapToken]);
-        });
+    public function updateSnapToken($paymentType, $oldSnapToken)
+    {
+        if ($paymentType === "UTS") {
+            $utsPayment = UtsPayment::where("snap_token", $oldSnapToken)->first();
+            $dataPayment = $this->dataPayment($utsPayment);
+            DB::transaction(function () use ($dataPayment) {
+                $midtrans = new CreateSnapToken($dataPayment);
+                $snapToken = $midtrans->getSnapToken();
+                // update
+                $this->utsUpdateSnap($dataPayment, $snapToken);
+            });
+        }
+        if ($paymentType === "UAS") {
+            $utsPayment = UasPayment::where("snap_token", $oldSnapToken)->first();
+            $dataPayment = $this->dataPayment($utsPayment);
+            DB::transaction(function () use ($dataPayment) {
+                $midtrans = new CreateSnapToken($dataPayment);
+                $snapToken = $midtrans->getSnapToken();
+                // update
+                $this->uasUpdateSnap($dataPayment, $snapToken);
+            });
+        }
+    }
+
+    public function dataPayment($payment)
+    {
+        $orderId = 'spp-' . uniqid();
+        $dataPayment = collect([
+            "order_id" => $orderId,
+            "nominal_pembayaran" => $payment->nominal_pembayaran,
+            "jenis_pemabyaran" => $payment->jenis_pembayaran,
+            "nama_siswa" => auth()->user()->siswa->nama,
+            "email" => auth()->user()->email,
+            "no_hp" => auth()->user()->siswa->no_hp
+        ]);
+        return $dataPayment;
+    }
+
+    public function utsUpdateSnap($dataPayment, $snapToken)
+    {
+        try {
+            UtsPayment::where('id', $dataPayment->id)->update(['order_id' => $dataPayment->order_id, 'snap_token' => $snapToken]);
+        } catch (\Throwable $th) {
+            return response()->json(["erros" => $th->getMessage()], 500);
+        }
+    }
+    public function uasUpdateSnap($dataPayment, $snapToken)
+    {
+        try {
+            UasPayment::where('id', $dataPayment->id)->update(['order_id' => $dataPayment->order_id, 'snap_token' => $snapToken]);
+        } catch (\Throwable $th) {
+            return response()->json(["erros" => $th->getMessage()], 500);
+        }
     }
 }
