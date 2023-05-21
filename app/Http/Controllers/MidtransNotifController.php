@@ -6,9 +6,7 @@ use App\Models\UasPayment;
 use App\Models\UtsPayment;
 use App\Services\Midtrans\CreateSnapToken;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 
 class MidtransNotifController extends Controller
 {
@@ -66,52 +64,52 @@ class MidtransNotifController extends Controller
             if ($fraud == 'challenge') {
                 // TODO Set payment status in merchant's database to 'failure'
                 if ($uasPay) {
-                    $uasPay->status_pembayaran = "failure";
+                    $uasPay->status_pembayaran = "failed";
                     $uasPay->save();
                 }
                 if ($utsPay) {
-                    $utsPay->status_pembayaran = "failure";
+                    $utsPay->status_pembayaran = "failed";
                     $utsPay->save();
                 }
             } else if ($fraud == 'accept') {
                 // TODO Set payment status in merchant's database to 'failure'
                 if ($uasPay) {
-                    $uasPay->status_pembayaran = "failure";
+                    $uasPay->status_pembayaran = "failed";
                     $uasPay->save();
                 }
                 if ($utsPay) {
-                    $utsPay->status_pembayaran = "failure";
+                    $utsPay->status_pembayaran = "failed";
                     $utsPay->save();
                 }
             }
         } else if ($transaction == 'deny') {
             // TODO Set payment status in merchant's database to 'failure'
             if ($uasPay) {
-                $uasPay->status_pembayaran = "failure";
+                $uasPay->status_pembayaran = "failed";
                 $uasPay->save();
             }
             if ($utsPay) {
-                $utsPay->status_pembayaran = "failure";
+                $utsPay->status_pembayaran = "failed";
                 $utsPay->save();
             }
         } else if ($transaction == 'pending') {
             // TODO Set payment status in merchant's database to 'failure'
             if ($uasPay) {
-                $uasPay->status_pembayaran = "failure";
+                $uasPay->status_pembayaran = "failed";
                 $uasPay->save();
             }
             if ($utsPay) {
-                $utsPay->status_pembayaran = "failure";
+                $utsPay->status_pembayaran = "failed";
                 $utsPay->save();
             }
         } else if ($transaction == 'expire') {
             // TODO Set payment status in merchant's database to 'failure'
             if ($uasPay) {
-                $uasPay->status_pembayaran = "failure";
+                $uasPay->status_pembayaran = "failed";
                 $uasPay->save();
             }
             if ($utsPay) {
-                $utsPay->status_pembayaran = "failure";
+                $utsPay->status_pembayaran = "failed";
                 $utsPay->save();
             }
         }
@@ -122,9 +120,10 @@ class MidtransNotifController extends Controller
     {
         $paymentType = $request->input("payment_type");
         $oldSnapToken = $request->input("old_snap_token");
-        $this->updateSnapToken($paymentType, $oldSnapToken);
+        $result = $this->updateSnapToken($paymentType, $oldSnapToken);
         return response()->json([
-            "message" => "snap token generated!"
+            "message" => "snap token generated!",
+            "result" => json_encode($result)
         ]);
     }
 
@@ -132,22 +131,22 @@ class MidtransNotifController extends Controller
     {
         if ($paymentType === "UTS") {
             $utsPayment = UtsPayment::where("snap_token", $oldSnapToken)->first();
-            $dataPayment = $this->dataPayment($utsPayment);
+            $dataPayment = (object) $this->dataPayment($utsPayment);
             DB::transaction(function () use ($dataPayment) {
                 $midtrans = new CreateSnapToken($dataPayment);
                 $snapToken = $midtrans->getSnapToken();
                 // update
-                $this->utsUpdateSnap($dataPayment, $snapToken);
+                return $this->utsUpdateSnap($dataPayment, $snapToken);
             });
         }
         if ($paymentType === "UAS") {
-            $utsPayment = UasPayment::where("snap_token", $oldSnapToken)->first();
-            $dataPayment = $this->dataPayment($utsPayment);
+            $uasPayment = UasPayment::where("snap_token", $oldSnapToken)->first();
+            $dataPayment = (object) $this->dataPayment($uasPayment);
             DB::transaction(function () use ($dataPayment) {
                 $midtrans = new CreateSnapToken($dataPayment);
                 $snapToken = $midtrans->getSnapToken();
                 // update
-                $this->uasUpdateSnap($dataPayment, $snapToken);
+                return $this->uasUpdateSnap($dataPayment, $snapToken);
             });
         }
     }
@@ -155,31 +154,34 @@ class MidtransNotifController extends Controller
     public function dataPayment($payment)
     {
         $orderId = 'spp-' . uniqid();
-        $dataPayment = collect([
+        $dataPayment = [
+            "id" => $payment->id,
             "order_id" => $orderId,
             "nominal_pembayaran" => $payment->nominal_pembayaran,
-            "jenis_pemabyaran" => $payment->jenis_pembayaran,
-            "nama_siswa" => auth()->user()->siswa->nama,
-            "email" => auth()->user()->email,
-            "no_hp" => auth()->user()->siswa->no_hp
-        ]);
+            "jenis_pembayaran" => $payment->jenis_pembayaran,
+            "nama_siswa" => $payment->siswa->nama,
+            "email" => $payment->siswa->user->email,
+            "no_hp" => $payment->siswa->no_hp
+        ];
         return $dataPayment;
     }
 
     public function utsUpdateSnap($dataPayment, $snapToken)
     {
         try {
-            UtsPayment::where('id', $dataPayment->id)->update(['order_id' => $dataPayment->order_id, 'snap_token' => $snapToken]);
+            $utsSnap = UtsPayment::where('id', $dataPayment->id)->update(['order_id' => $dataPayment->order_id, 'snap_token' => $snapToken, "status_pembayaran" => "pending"])->first();
+            return $utsSnap;
         } catch (\Throwable $th) {
-            return response()->json(["erros" => $th->getMessage()], 500);
+            return response()->json(["errors" => $th->getMessage()], 500);
         }
     }
     public function uasUpdateSnap($dataPayment, $snapToken)
     {
         try {
-            UasPayment::where('id', $dataPayment->id)->update(['order_id' => $dataPayment->order_id, 'snap_token' => $snapToken]);
+            $uasPayment = UasPayment::where('id', $dataPayment->id)->update(['order_id' => $dataPayment->order_id, 'snap_token' => $snapToken, "status_pembayaran" => "pending"])->first();
+            return $uasPayment;
         } catch (\Throwable $th) {
-            return response()->json(["erros" => $th->getMessage()], 500);
+            return response()->json(["errors" => $th->getMessage()], 500);
         }
     }
 }

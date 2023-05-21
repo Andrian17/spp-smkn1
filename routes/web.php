@@ -34,16 +34,20 @@ Route::middleware('siswa')->group(function () {
 
 Route::middleware('admin')->group(function () {
     Route::resource('/admin', AdminController::class)->middleware('admin');
-    Route::get('/dashboard/getAllSiswa',  [AdminController::class, 'getAllSiswa'])->name('admin.allSiswa');
-    Route::get('/tampilSiswa/{siswa}',  [AdminController::class, 'tampilSiswa'])->name('admin.tampilSiswa');
-    Route::get('/editSiswa/{siswa}',  [AdminController::class, 'editSiswa'])->name('admin.tampilSiswa');
-    Route::put('/updateSiswa/{siswa}',  [AdminController::class, 'updateSiswa'])->name('admin.tampilSiswa');
-    Route::get('/dashboard/allPembayaran',  [AdminController::class, 'allPembayaran'])->name('admin.allPembayaran');
+
+    Route::get('/dashboard/siswa',  [AdminController::class, 'semuaSiswa'])->name('admin.semuaSiswa');
+    Route::get('/dashboard/tambah-siswa',  [AdminController::class, 'tambahSiswa'])->name('admin.tambahSiswa');
+    Route::post('/dashboard/tambah-siswa',  [AdminController::class, 'simpanSiswa'])->name('admin.simpanSiswa');
+    Route::put('/dashboard/siswa/{siswa}',  [AdminController::class, 'updateSiswa'])->name('admin.updateSiswa');
+    Route::get('/dashboard/siswa/{siswa}',  [AdminController::class, 'tampilSiswa'])->name('admin.tampilSiswa');
+    Route::get('/dashboard/siswa/{siswa}/edit',  [AdminController::class, 'editSiswa'])->name('admin.editSiswa');
+
+    Route::get('/dashboard/pembayaran',  [AdminController::class, 'semuaPembayaran'])->name('admin.semuaPembayaran');
 
     // PDF
     Route::get('/dashboard/exportExcell',  [AdminController::class, 'exportExcell'])->name('admin.exportExcell');
     Route::get('/dashboard/exportPDF',  [AdminController::class, 'exportPDF'])->name('admin.exportPDF');
-    Route::resource('/jurusan',  JurusanController::class);
+    Route::resource('/dashboard/jurusan',  JurusanController::class);
 });
 
 require __DIR__ . '/auth.php';

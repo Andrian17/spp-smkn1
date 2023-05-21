@@ -67,10 +67,15 @@
                               <td scope='row'>Pembayaran</td>
                               <td>:</td>
                               <td>
-                                  <span>{{ $payment->jenis_pembayaran }}</span>
-                                @if ($payment->status_pembayaran != 'success')
-                                  <button id='{{ $payment->jenis_pembayaran }}' class='btn btn-success text-light btn-sm ms-3'>bayar</button>
-                                 @endif
+                                @if ($payment->status_pembayaran === "pending")
+                                    <span>{{ $payment->jenis_pembayaran }}</span>
+                                    <button class='btn btn-success text-light btn-sm ms-3' onclick='createPayment("{{ $payment->snap_token }}", "UTS")'>bayar</button>
+                                @elseif ($payment->status_pembayaran === 'failed')
+                                    <span>pembayaran gagal</span>
+                                    <button class='btn btn-success text-light btn-sm ms-3' onclick='updatePayment("{{ $payment->snap_token }}", "UTS")'>bayar ulang</button>
+                                @else
+                                    <span>{{ $payment->jenis_pembayaran }}</span>
+                                @endif
                               </td>
                             </tr>
                             <tr>
@@ -112,10 +117,14 @@
                               <td scope='row'>Pembayaran</td>
                               <td>:</td>
                               <td>
-                                  <span>{{ $payment->jenis_pembayaran }}</span>
-                                @if ($payment->status_pembayaran != 'success')
-                                    <button id='{{ $payment->jenis_pembayaran }}' class='btn btn-success text-light btn-sm ms-3' onclick='createPayment("{{ $payment->snap_token }}", "UAS")'>bayar</button>
-
+                                @if ($payment->status_pembayaran === "pending")
+                                    <span>{{ $payment->jenis_pembayaran }}</span>
+                                    <button class='btn btn-success text-light btn-sm ms-3' onclick='createPayment("{{ $payment->snap_token }}", "UAS")'>bayar</button>
+                                @elseif ($payment->status_pembayaran === 'failed')
+                                    <span>pembayaran gagal</span>
+                                    <button class='btn btn-success text-light btn-sm ms-3' onclick='updatePayment("{{ $payment->snap_token }}", "UAS")'>bayar ulang</button>
+                                @else
+                                    <span>{{ $payment->jenis_pembayaran }}</span>
                                 @endif
                               </td>
                             </tr>
@@ -156,23 +165,23 @@
         snap.pay(snapToken, {
         // Optional
         onSuccess: function (result) {
-        /* You may add your own js here, this is just example */
-        console.log("success");
-        console.log(result);
-        location.reload();
+            /* You may add your own js here, this is just example */
+            console.log("success");
+            console.log(result);
+            location.reload();
         },
         // Optional
         onPending: function (result) {
-        /* You may add your own js here, this is just example */
-        console.log(result);
-        console.log("pending");
-        location.reload()
+            /* You may add your own js here, this is just example */
+            console.log("pending");
+            console.log(result);
+            location.reload()
         },
         // Optional
         onError: function (result) {
         /* You may add your own js here, this is just example */
-            console.log(result, "err");
             console.log("gagal");
+            console.log(result, "err");
             fetch('/api/pembayaran/updateSnap', {
                 method: 'PUT',
                 headers: {
@@ -188,8 +197,25 @@
                 console.log(err);
             });
             location.reload()
-        }
+        },
     });
+    }
+
+    async function updatePayment(snapToken, paymentType) {
+        const payment =  await fetch('/api/pembayaran/updateSnap', {
+            method: 'PUT',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "old_snap_token" : snapToken,
+                "payment_type" : paymentType
+            })
+        }).then((result) => result.json());
+        console.log("update token");
+        console.log(payment);
+        alert("snap token berhasil diupdate");
+        location.reload();
     }
 </script>
 @endpush

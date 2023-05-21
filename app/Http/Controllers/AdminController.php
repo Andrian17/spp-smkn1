@@ -12,25 +12,22 @@ use App\Models\UasPayment;
 use App\Models\UtsPayment;
 // use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Models\Alamat;
 use App\Models\Kelas;
-use App\Models\User;
+use App\Services\AdminService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
-
-
-
 
 class AdminController extends Controller
 {
 
-    public function __construct()
+    protected $adminService;
+
+    public function __construct(AdminService $adminService)
     {
         $this->middleware('admin');
+        $this->adminService = $adminService;
     }
 
     /**
@@ -40,8 +37,14 @@ class AdminController extends Controller
      */
     public function index()
     {
+        $jumlahSiswa = Siswa::all()->count();
+        $jumlahPembayaran = UtsPayment::all()->count() + UasPayment::all()->count();
+        $jumlahJurusan = Jurusan::all()->count();
+
         return view('admin.adminDashboard', [
-            'title' => 'Dashboard'
+            "jumlahSiswa" => $jumlahSiswa,
+            "jumlahPembayaran" => $jumlahPembayaran,
+            "jumlahJurusan" => $jumlahJurusan
         ]);
     }
 
@@ -50,10 +53,8 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function tambahSiswa()
     {
-        // $siswa = Siswa::all();
-
         $jurusan = Jurusan::all();
         $kelas = Kelas::all();
         return view('admin.tambahSiswa', [
@@ -69,63 +70,14 @@ class AdminController extends Controller
      * @param  \App\Http\Requests\StoreAdminRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAdminRequest $request)
+    public function simpanSiswa(StoreAdminRequest $request)
     {
         DB::transaction(function () use ($request) {
-            // Create User
-            $user = $request->validate([
-                'email' => 'required|email|unique:users',
-                'nama' => 'required',
-            ]);
-            $user['name'] = $request->nama;
-            $user['password'] = Hash::make($request->nis);
-            $saveUser = User::create($user);
-            // Create Siswa
-            $siswa = $request->validate([
-                'nis' => 'required|unique:siswas',
-                'nama' => 'required',
-                'jenis_kelamin' => 'required',
-                'no_hp' => 'required|numeric|min:11',
-                'semester' => 'required',
-                'tanggal_lahir' => 'required',
-                'agama' => 'required',
-                'jurusan_id' => 'required',
-                'kelas_id' => 'required',
-                'angkatan' => 'required'
-            ]);
-            $siswa["user_id"] = $saveUser->id;
-            $saveSiswa = Siswa::create($siswa);
-            // Create Alamat
-            $alamat = $request->validate([
-                'alamat' => 'required'
-            ]);
-            $alamat["siswa_id"] = $saveSiswa->id;
-            Alamat::create($alamat);
-            // Create Payment
-            $this->_createPayments($saveSiswa->id);
+            $saveUser = $this->adminService->userSave($request);
+            $saveSiswa = $this->adminService->siswaSave($request, $saveUser->id);
+            $saveAlamat = $this->adminService->alamatSave($request, $saveSiswa->id);
         });
-        return redirect('/dashboard/getAllSiswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa baru telah ditambahkan </div>');
-    }
-
-    private function _createPayments($siswa_id)
-    {
-        $siswa = $siswa_id;
-        DB::transaction(function () use ($siswa) {
-            // Create UTS Payment
-            UtsPayment::create([
-                'siswa_id' => $siswa,
-                'order_id' => 'spp-' . uniqid(),
-                'nominal_pembayaran' => 240000,
-                'jenis_pembayaran' => 'mid-semester',
-            ]);
-            // Create UAS Payment
-            UasPayment::create([
-                'siswa_id' => $siswa,
-                'order_id' => 'spp-' . uniqid(),
-                'nominal_pembayaran' => 240000,
-                'jenis_pembayaran' => 'akhir-semester',
-            ]);
-        });
+        return redirect('/dashboard/tambah-siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Siswa berhasil ditambahkan </div>');
     }
 
     public function exportExcell()
@@ -145,53 +97,8 @@ class AdminController extends Controller
         return $pdf->stream('laporanSPP.pdf');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateAdminRequest  $request
-     * @param  \App\Models\Admin  $admin
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateAdminRequest $request, Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Admin  $admin
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Admin $admin)
-    {
-        //
-    }
-
     // Semua Data Siswa
-    public function getAllSiswa()
+    public function semuaSiswa()
     {
         $siswa = Siswa::with('utsPayments')
             ->with('uasPayments')
@@ -199,14 +106,14 @@ class AdminController extends Controller
             ->with('kelas')
             ->with('alamat')
             ->latest()->get();
-        return view('admin.allSiswa', [
+        return view('admin.semuaSiswa', [
             'siswa' => $siswa,
             'title' => "Data Siswa"
         ]);
     }
 
     // Semua Data Pembayaran
-    public function allPembayaran()
+    public function semuaPembayaran()
     {
         $siswa = Siswa::with('utsPayments')
             ->with('uasPayments')
@@ -221,7 +128,7 @@ class AdminController extends Controller
     }
 
     // Semua Data Kelas
-    public function allKelas()
+    public function semuaKelas()
     {
         $kelas = Siswa::with('utsPayment')
             ->with('uasPayment')
@@ -242,14 +149,12 @@ class AdminController extends Controller
 
     public function editSiswa(Siswa $siswa)
     {
-
         $jurusan = Jurusan::all();
         $kelas = Kelas::all();
         return view('admin.editSiswa', [
             'siswa' => $siswa,
             'kelas' => $kelas,
             'jurusan' => $jurusan,
-            'title' => 'Edit Siswa'
         ]);
     }
 
@@ -273,6 +178,6 @@ class AdminController extends Controller
             'alamat' => $valid["alamat"]
         ]);
         // return redirect()
-        return redirect('/dashboard/getAllSiswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa telah diupdate </div>');
+        return redirect('/dashboard/siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa telah diupdate </div>');
     }
 }

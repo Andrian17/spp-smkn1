@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Jurusan;
 use App\Http\Requests\StoreJurusanRequest;
 use App\Http\Requests\UpdateJurusanRequest;
-use App\Models\Siswa;
-use Illuminate\Validation\Validator;
 
 class JurusanController extends Controller
 {
