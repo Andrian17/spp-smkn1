@@ -18,9 +18,9 @@
         @endif
        </div>
 
-        <form action="/siswa/{{ $siswa->id }}" method="POST">
+        <form method="POST" action="{{ route('siswa.update', $siswa->id) }}" enctype="multipart/form-data">
+            @method("PUT")
             @csrf()
-            @method("patch")
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-10 col-sm-12 mb-3">

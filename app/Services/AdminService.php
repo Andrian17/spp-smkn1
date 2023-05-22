@@ -2,27 +2,26 @@
 
 namespace App\Services;
 
-use App\Http\Requests\StoreAdminRequest;
 use App\Models\Alamat;
 use App\Models\Siswa;
 use App\Models\UasPayment;
 use App\Models\User;
 use App\Models\UtsPayment;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AdminService
 {
 
-    public function adminInputValidate(StoreAdminRequest $storeAdminRequest, $forUserSave = false, $forSiswaSave = false)
+    public function adminInputValidate(Request $request, $forUserSave = false, $forSiswaSave = false)
     {
-        $adminInputValidate = $storeAdminRequest->validate([
+        $adminInputValidate = $request->validate([
             'email' => $forUserSave ? 'required|email|unique:users' : 'required',
             'nama' => 'required',
             'nis' => $forSiswaSave ? 'required|unique:siswas' : 'required',
             'nama' => 'required',
             'jenis_kelamin' => 'required',
-            'no_hp' => 'required|min:11|numeric',
+            'no_hp' => 'required',
             'semester' => 'required',
             'tanggal_lahir' => 'required',
             'agama' => 'required',
@@ -34,11 +33,11 @@ class AdminService
         return $adminInputValidate;
     }
 
-    public function userSave(StoreAdminRequest $storeAdminRequest)
+    public function userSave(Request $request)
     {
-        $userValidate = $this->adminInputValidate($storeAdminRequest, true);
-        $userValidate['name'] = $storeAdminRequest->input("nama");
-        $userValidate['password'] = Hash::make($storeAdminRequest->input("nis"));
+        $userValidate = $this->adminInputValidate($request, true);
+        $userValidate['password'] = Hash::make($request->input("nis"));
+        $userValidate["name"] = $request->input("nama");
         try {
             $saveUser = User::create($userValidate);
             return $saveUser;
@@ -47,7 +46,7 @@ class AdminService
         }
     }
 
-    public function siswaSave(StoreAdminRequest $request, $userId)
+    public function siswaSave(Request $request, $userId)
     {
         $siswaValidate = $this->adminInputValidate($request, false, true);
         $siswaValidate["user_id"] = $userId;
@@ -59,9 +58,9 @@ class AdminService
         }
     }
 
-    public function alamatSave(StoreAdminRequest $storeAdminRequest, $siswaId)
+    public function alamatSave(Request $request, $siswaId)
     {
-        $alamatValidated = $this->adminInputValidate($storeAdminRequest);
+        $alamatValidated = $this->adminInputValidate($request);
         $alamatValidated["siswa_id"] = $siswaId;
         try {
             $alamat = Alamat::create($alamatValidated);
@@ -92,5 +91,18 @@ class AdminService
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
+    }
+
+    public function updateSiswaByAdmin(Request $request, Siswa $siswa)
+    {
+        $valid = $this->adminInputValidate($request, false, false);
+        unset($valid["nis"]);
+        // dd($valid);
+        $siswa->update($valid);
+        Alamat::where("siswa_id", $siswa->id)->update([
+            'alamat' => $valid["alamat"]
+        ]);
+        // return redirect()
+        return redirect('/dashboard/siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa telah diupdate </div>');
     }
 }

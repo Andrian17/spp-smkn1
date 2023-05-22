@@ -55,7 +55,7 @@
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Nis</label>
                                 <div class="col-sm-9">
-                                  <input type="number" class="form-control @error('nis') is-invalid @enderror" name="nis" value="{{ $siswa->nis }}"/>
+                                  <input type="number" class="form-control @error('nis') is-invalid @enderror" name="nis" value="{{ $siswa->nis }}" readonly/>
                                   @error('nis')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -175,7 +175,7 @@
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Nomor HP</label>
                                 <div class="col-sm-9">
-                                  <input type="number" class="form-control @error('no_hp') is-invalid @enderror" name="no_hp" minlength="11" value="{{ $siswa->no_hp }}" />
+                                  <input type="text" class="form-control @error('no_hp') is-invalid @enderror" name="no_hp" minlength="11" value="{{ $siswa->no_hp }}" />
                                   @error('no_hp')
                                     <div class="invalid-feedback">
                                         {{ $message }}

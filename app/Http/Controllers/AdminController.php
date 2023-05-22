@@ -3,21 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SiswaExport;
-use App\Models\Admin;
-use App\Http\Requests\StoreAdminRequest;
-use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Jurusan;
 use App\Models\Siswa;
 use App\Models\UasPayment;
 use App\Models\UtsPayment;
-// use Illuminate\Http\Request;
-
-use App\Models\Alamat;
 use App\Models\Kelas;
 use App\Services\AdminService;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -70,7 +65,7 @@ class AdminController extends Controller
      * @param  \App\Http\Requests\StoreAdminRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function simpanSiswa(StoreAdminRequest $request)
+    public function simpanSiswa(Request $request)
     {
         DB::transaction(function () use ($request) {
             $saveUser = $this->adminService->userSave($request);
@@ -158,26 +153,8 @@ class AdminController extends Controller
         ]);
     }
 
-    public function updateSiswa(UpdateAdminRequest $request, Siswa $siswa)
+    public function updateSiswa(Request $request, Siswa $siswa)
     {
-        $valid = $request->validate([
-            'nama' => 'required',
-            'jenis_kelamin' => 'required',
-            'no_hp' => 'required',
-            'semester' => 'required',
-            'tanggal_lahir' => 'required',
-            'agama' => 'required',
-            'jurusan_id' => 'required',
-            'kelas_id' => 'required',
-            'angkatan' => 'required',
-            'alamat' => 'required'
-        ]);
-        // dd($valid);
-        $siswa->update($valid);
-        Alamat::where("siswa_id", $siswa->id)->update([
-            'alamat' => $valid["alamat"]
-        ]);
-        // return redirect()
-        return redirect('/dashboard/siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa telah diupdate </div>');
+        return $this->adminService->updateSiswaByAdmin($request, $siswa);
     }
 }

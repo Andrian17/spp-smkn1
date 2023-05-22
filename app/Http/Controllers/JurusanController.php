@@ -40,52 +40,6 @@ class JurusanController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreJurusanRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreJurusanRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Jurusan  $jurusan
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Jurusan $jurusan)
-    {
-        // return response()->json($jurusan);
-        $siswa = $jurusan->siswa;
-        return view('admin.editJurusan', ['jurusan' => $jurusan, 'siswa' => $siswa, 'title' => 'Edit Jurusan']);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Jurusan  $jurusan
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Jurusan $jurusan)
-    {
-        $siswa = $jurusan->siswa;
-        return view('jurusan.editJurusan', ['jurusan' => $jurusan, 'siswa' => $siswa]);
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateJurusanRequest  $request
@@ -102,16 +56,5 @@ class JurusanController extends Controller
         return redirect()
             ->route('jurusan.index')
             ->with('pesan', '<div class="alert alert-info" role="alert">Jurusan berhasil diperbarui</div>');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Jurusan  $jurusan
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Jurusan $jurusan)
-    {
-        //
     }
 }

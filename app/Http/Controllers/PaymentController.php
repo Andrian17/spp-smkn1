@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payment;
-use App\Http\Requests\StorepaymentRequest;
-use App\Http\Requests\UpdatepaymentRequest;
 use App\Models\Siswa;
 use App\Models\UasPayment;
 use App\Models\UtsPayment;
 use App\Services\Midtrans\CreateSnapToken;
 use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isNull;
 
 class PaymentController extends Controller
 {
@@ -36,7 +31,6 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        // dd(auth()->user()->email);
         $this->_createSnapToken();
 
         $siswa = Siswa::where('user_id', auth()->user()->id)
@@ -92,76 +86,5 @@ class PaymentController extends Controller
             }
         }
         return;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StorepaymentRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StorepaymentRequest $request)
-    {
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(payment $payment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatepaymentRequest  $request
-     * @param  \App\Models\payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdatepaymentRequest $request, payment $payment)
-    {
-
-        DB::transaction(function () use ($request) {
-            $midtrans = new CreateSnapToken($request);
-            $snapToken = $midtrans->getSnapToken();
-
-            // update
-            UtsPayment::where('id', $request->id)->update(['snap_token' => $snapToken]);
-        });
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(payment $payment)
-    {
-        //
     }
 }
