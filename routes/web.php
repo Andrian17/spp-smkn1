@@ -41,6 +41,7 @@ Route::middleware('admin')->group(function () {
     Route::put('/dashboard/siswa/{siswa}',  [AdminController::class, 'updateSiswa'])->name('admin.updateSiswa');
     Route::get('/dashboard/siswa/{siswa}',  [AdminController::class, 'tampilSiswa'])->name('admin.tampilSiswa');
     Route::get('/dashboard/siswa/{siswa}/edit',  [AdminController::class, 'editSiswa'])->name('admin.editSiswa');
+    Route::delete('/dashboard/siswa/{siswa}', [AdminController::class, 'hapusSiswa'])->name('admin.hapusSiswa');
 
     Route::get('/dashboard/pembayaran',  [AdminController::class, 'semuaPembayaran'])->name('admin.semuaPembayaran');
 

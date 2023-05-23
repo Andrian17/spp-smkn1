@@ -22,19 +22,10 @@ class JurusanController extends Controller
     public function index()
     {
         $jurusan = Jurusan::with('siswa')->get();
-        $style = [
-            'bg-primary' => 'bg-primary',
-            'bg-success' => 'bg-success',
-            'bg-warning' => 'bg-warning',
-            'bg-secondary' => 'bg-secondary',
-        ];
-        // dd($jurusan);
         return view(
             'admin.jurusan',
             [
                 "jurusan" => $jurusan,
-                "style" => $style,
-                "title" => "Data Jurusan"
             ]
         );
     }

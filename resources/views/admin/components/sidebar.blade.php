@@ -32,11 +32,11 @@
           <i class="mdi mdi-format-list-bulleted menu-icon"></i>
         </a>
       </li>
-      <li class="nav-item">
+      {{-- <li class="nav-item">
         <a class="nav-link" href="/dashboard/jurusan">
           <span class="menu-title">Data Jurusan</span>
           <i class="mdi mdi-chart-bar menu-icon"></i>
         </a>
-      </li>
+      </li> --}}
     </ul>
 </nav>

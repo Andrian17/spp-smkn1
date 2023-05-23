@@ -1,6 +1,5 @@
-@extends('template.main')
-@section('title', $title)
-@section('content')
+@extends('admin.template')
+@section('main-panel')
     <h1 class="mt-4">Data Pembayaran</h1>
     <div class="row">
         <div class="col-lg-10">

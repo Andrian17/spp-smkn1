@@ -1,6 +1,6 @@
-@extends('template.main')
+@extends('admin.template')
 @section('title', $title)
-@section('content')
+@section('main-panel')
 <div class="container">
     <div class="row">
         <div class="col-md-12">

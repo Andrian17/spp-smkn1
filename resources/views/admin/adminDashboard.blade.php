@@ -38,7 +38,7 @@
                     </a>
                 </div>
                 </div>
-                <div class="col-md-4 stretch-card grid-margin">
+                {{-- <div class="col-md-4 stretch-card grid-margin">
                 <div class="card bg-gradient-success card-img-holder text-white">
                     <a href="/dashboard/jurusan" class="card-body text-decoration-none text-light">
                         <img src="assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
@@ -47,7 +47,7 @@
                         <h2 class="mb-5">{{ $jumlahJurusan }}</h2>
                     </a>
                 </div>
-                </div>
+                </div> --}}
             </div>
         </div>
         <!-- content-wrapper ends -->

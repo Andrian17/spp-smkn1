@@ -45,8 +45,15 @@
                                     <td>{{ $s->nis }}</td>
                                     <td>{{ $s->no_hp }}</td>
                                     <td class="">
-                                        <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-primary" href="/tampilSiswa/{{ $s->id }}">detail</a>
-                                        <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-secondary" href="/dashboard/siswa/{{ $s->id }}/edit">edit</a>
+                                        <div class="d-flex gap-1">
+                                            <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-primary" href="/dashboard/siswa/{{ $s->id }}">detail</a>
+                                            <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-secondary" href="/dashboard/siswa/{{ $s->id }}/edit">edit</a>
+                                            <form action="/dashboard/siswa/{{ $s->id }}" method="post">
+                                                @method("delete")
+                                                @csrf()
+                                                <button class="btn btn-sm btn-danger" id="tombolHapus" onclick="return confirm('Hapus Data Siswa ?')">hapus</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
 

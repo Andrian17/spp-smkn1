@@ -55,7 +55,7 @@
           </div>
             <div class="container row">
                 <div class="col-lg-6 col-md-12 col-sm-12 my-3">
-                    <table class="table">
+                    <table class="table mb-2 border border-bottom">
                         <tbody>
                             @foreach ($siswa->utsPayments as $payment)
                             <tr>

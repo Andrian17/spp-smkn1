@@ -71,6 +71,7 @@ class AdminController extends Controller
             $saveUser = $this->adminService->userSave($request);
             $saveSiswa = $this->adminService->siswaSave($request, $saveUser->id);
             $saveAlamat = $this->adminService->alamatSave($request, $saveSiswa->id);
+            $createPayment = $this->adminService->createPayments($saveSiswa->id);
         });
         return redirect('/dashboard/tambah-siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Siswa berhasil ditambahkan </div>');
     }
@@ -156,5 +157,15 @@ class AdminController extends Controller
     public function updateSiswa(Request $request, Siswa $siswa)
     {
         return $this->adminService->updateSiswaByAdmin($request, $siswa);
+    }
+
+    public function hapusSiswa(Siswa $siswa)
+    {
+        try {
+            $siswa->delete();
+            return redirect('/dashboard/siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Siswa berhasil dihapus </div>');
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
     }
 }

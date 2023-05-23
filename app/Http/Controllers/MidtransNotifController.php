@@ -95,11 +95,11 @@ class MidtransNotifController extends Controller
         } else if ($transaction == 'pending') {
             // TODO Set payment status in merchant's database to 'failure'
             if ($uasPay) {
-                $uasPay->status_pembayaran = "failed";
+                $uasPay->status_pembayaran = "pending";
                 $uasPay->save();
             }
             if ($utsPay) {
-                $utsPay->status_pembayaran = "failed";
+                $utsPay->status_pembayaran = "pending";
                 $utsPay->save();
             }
         } else if ($transaction == 'expire') {

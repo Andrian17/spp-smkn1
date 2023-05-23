@@ -12,6 +12,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="/siswa/{{ $siswa->id }}/edit" class="nav-link">
+                  Edit Data
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href='/siswa/{{ $siswa->id }}' target='__blank' class="nav-link">
                   Bukti Pembayaran
                 </a>
