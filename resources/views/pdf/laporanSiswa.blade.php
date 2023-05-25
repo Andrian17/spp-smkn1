@@ -15,7 +15,7 @@
       <title>Laporan Pembayaran</title>
    </head>
    <body>
-    <div class='container'>
+    {{-- <div class='container'>
         <div class='row'>
             <div class='col-lg-12'>
                 <div class='jumbotron'>
@@ -154,7 +154,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
       <!-- Optional JavaScript; choose one of the two! -->
 

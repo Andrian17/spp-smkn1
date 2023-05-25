@@ -17,9 +17,9 @@
                 </div>
             @endif --}}
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-outline-primary btn-sm m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            {{-- <button type="button" class="btn btn-outline-primary btn-sm m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <i class="fa-solid fa-pen-to-square"></i> edit jurusan
-            </button>
+            </button> --}}
             <div class="card my-6">
                 <div class="card-body">
                     <h2>{{ $jurusan->jurusan }}</h2>
