@@ -7,7 +7,7 @@
     </ol>
     <div class="row">
         <div class="col-lg-10 mx-auto">
-            {{-- @if ($errors->any())
+            @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -15,7 +15,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif --}}
+            @endif
             <!-- Button trigger modal -->
             {{-- <button type="button" class="btn btn-outline-primary btn-sm m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <i class="fa-solid fa-pen-to-square"></i> edit jurusan
