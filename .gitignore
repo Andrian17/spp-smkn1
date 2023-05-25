@@ -14,4 +14,4 @@ yarn-error.log
 /.idea
 /.vscode
 
-resources/views/pdf/
+/resources/views/pdf/
