@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="mt-4">Dashboard</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Data Jurusan</li>
+        {{-- <li class="breadcrumb-item active">Data Jurusan</li> --}}
     </ol>
     <div class="row">
         <div class="col-lg-10 mx-auto">
