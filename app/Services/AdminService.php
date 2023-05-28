@@ -19,7 +19,6 @@ class AdminService
             'email' => $forUserSave ? 'required|email|unique:users' : 'required',
             'nama' => 'required',
             'nis' => $forSiswaSave ? 'required|unique:siswas' : 'required',
-            'nama' => 'required',
             'jenis_kelamin' => 'required',
             'no_hp' => 'required',
             'semester' => 'required',
@@ -102,7 +101,8 @@ class AdminService
         Alamat::where("siswa_id", $siswa->id)->update([
             'alamat' => $valid["alamat"]
         ]);
-        // return redirect()
-        return redirect('/dashboard/siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Data Siswa telah diupdate </div>');
+        return response()->json([
+            "message" => "Siswa berhasil diperbaharui!"
+        ]);
     }
 }

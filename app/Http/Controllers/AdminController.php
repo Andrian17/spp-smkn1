@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SiswaExport;
+use App\Models\Alamat;
 use App\Models\Jurusan;
 use App\Models\Siswa;
 use App\Models\UasPayment;
 use App\Models\UtsPayment;
 use App\Models\Kelas;
+use App\Models\User;
 use App\Services\AdminService;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -162,8 +164,16 @@ class AdminController extends Controller
     public function hapusSiswa(Siswa $siswa)
     {
         try {
-            $siswa->delete();
-            return redirect('/dashboard/siswa')->with('pesan', '<div class="alert alert-success mx-2" role="alert"> Siswa berhasil dihapus </div>');
+            DB::transaction(function () use ($siswa) {
+                UtsPayment::where("siswa_id", $siswa->id)->delete();
+                UasPayment::where("siswa_id", $siswa->id)->delete();
+                Alamat::where("siswa_id", $siswa->id)->delete();
+                User::where("id", $siswa->user_id)->delete();
+                $siswa->delete();
+            });
+            return response()->json([
+                "message" => "berhasil menghapus data mahasiswa!"
+            ]);
         } catch (\Throwable $th) {
             return $th->getMessage();
         }

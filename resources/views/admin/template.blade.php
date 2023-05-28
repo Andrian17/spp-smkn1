@@ -37,7 +37,6 @@
     <script src="/assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
-    <script src="/assets/vendors/chart.js/Chart.min.js"></script>
     <script src="/assets/js/jquery.cookie.js" type="text/javascript"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
@@ -48,6 +47,10 @@
     <!-- Custom js for this page -->
     <script src="/assets/js/dashboard.js"></script>
     <script src="/assets/js/todolist.js"></script>
+    {{-- Jquery --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {{-- Sweet Alert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- End custom js for this page -->
     @stack('script')
   </body>

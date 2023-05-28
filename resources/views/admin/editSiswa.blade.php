@@ -33,7 +33,7 @@
                         @if (session()->has('pesan'))
                             {!! session('pesan') !!}
                         @endif
-                        <form class="form-sample" id="siswaForm" method="POST" action="/dashboard/siswa/{{ $siswa->id }}">
+                        <form class="form-sample" id="siswaForm" data-id="{{ $siswa->id }}">
                             @method("PUT")
                             @csrf
                           <p class="card-description"> Masukkan data Siswa </p>
@@ -160,8 +160,8 @@
                           <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="exampleTextarea1">Alamat</label>
-                                    <textarea class="form-control @error('alamat') is-invalid @enderror" id="exampleTextarea1" rows="4" name="alamat">{{ $siswa->alamat->alamat }}</textarea>
+                                    <label for="alamat">Alamat</label>
+                                    <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" rows="4" name="alamat">{{ $siswa->alamat->alamat }}</textarea>
                                     @error('alamat')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -199,7 +199,7 @@
                             </div>
                           </div>
                           <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                          <button class="btn btn-light" type="reset">Cancel</button>
+                          <button class="btn btn-light btn-update" data-id="{{ $siswa->id }}" type="reset">Cancel</button>
                         </form>
                       </div>
                     </div>
@@ -212,3 +212,56 @@
         <!-- partial -->
     </div>
 @endsection
+
+@push('script')
+    <script>
+         $(document).ready(function () {
+            $('form').submit(function (event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah Anda yakin ingin menghapus data ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/dashboard/siswa/{{ $siswa->id }}',
+                            type: 'PUT',
+                            dataType: 'json',
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                email: $('input[name="email"]').val(),
+                                nama: $('input[name="nama"]').val(),
+                                tanggal_lahir: $('input[name="tanggal_lahir"]').val(),
+                                nis: $('input[name="nis"]').val(),
+                                no_hp: $('input[name="no_hp"]').val(),
+                                angkatan: $('input[name="angkatan"]').val(),
+                                jenis_kelamin: $('select[name="jenis_kelamin"]').val(),
+                                semester: $('select[name="semester"]').val(),
+                                jurusan_id: $('select[name="jurusan_id"]').val(),
+                                kelas_id: $('select[name="kelas_id"]').val(),
+                                agama: $('select[name="agama"]').val(),
+                                alamat: $('#alamat').val(),
+                            },
+                            success: function (response) {
+                                Swal.fire('Sukses', response.message, 'success').then(function () {
+                                    window.location.href = "/dashboard/siswa/{{ $siswa->id }}"
+                                });
+                            },
+                            error: function (xhr) {
+                                console.log(xhr.responseJSON);
+                                Swal.fire('Error', 'Terjadi kesalahan saat memperbaharui data : ' + xhr.responseJSON.message, 'error');
+                            }
+                        });
+                    }
+                });
+            })
+        });
+
+    </script>
+@endpush
