@@ -42,6 +42,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/dashboard/siswa/{siswa}',  [AdminController::class, 'tampilSiswa'])->name('admin.tampilSiswa');
     Route::get('/dashboard/siswa/{siswa}/edit',  [AdminController::class, 'editSiswa'])->name('admin.editSiswa');
     Route::delete('/dashboard/siswa/{siswa}', [AdminController::class, 'hapusSiswa'])->name('admin.hapusSiswa');
+    Route::get('/dashboard/ajaxStudentReq', [AdminController::class, 'ajaxStudentsRequest'])->name('admin.ajaxStudentsHandler');
 
     Route::get('/dashboard/pembayaran',  [AdminController::class, 'semuaPembayaran'])->name('admin.semuaPembayaran');
 

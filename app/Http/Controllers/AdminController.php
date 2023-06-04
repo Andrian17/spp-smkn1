@@ -96,8 +96,9 @@ class AdminController extends Controller
     }
 
     // Semua Data Siswa
-    public function semuaSiswa()
+    public function semuaSiswa( Request $request )
     {
+
         $siswa = Siswa::with('utsPayments')
             ->with('uasPayments')
             ->with('jurusan')
@@ -177,5 +178,26 @@ class AdminController extends Controller
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
+    }
+
+    public function ajaxStudentsRequest(Request $request)
+    {
+        $search_students = $request->query('search_students');
+        if ($search_students) {
+            $siswa = Siswa::with('utsPayments')
+                ->with('uasPayments')
+                ->with('jurusan')
+                ->with('kelas')
+                ->with('alamat')
+                ->where('nama', 'LIKE', "%$search_students%")->get();
+            return response()->json($siswa, 200);
+        }
+        $siswa = Siswa::with('utsPayments')
+            ->with('uasPayments')
+            ->with('jurusan')
+            ->with('kelas')
+            ->with('alamat')
+            ->latest()->get();
+        return response()->json($siswa, 200);
     }
 }

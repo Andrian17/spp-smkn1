@@ -21,10 +21,13 @@
                     @if (session()->has('pesan'))
                         {!! session('pesan') !!}
                     @endif
-                    <a href="{{ route('admin.tambahSiswa') }}"
-                        class="btn btn-info rounded-pill btn-sm text-decoration-none my-3">Tambah Siswa
-                        <i class="mdi mdi-account-plus"></i>
-                    </a>
+                    <div class="m-2 p-2 d-flex justify-content-between">
+                        <a href="{{ route('admin.tambahSiswa') }}"
+                            class="btn btn-info rounded-pill btn-sm text-decoration-none my-3">Tambah Siswa
+                            <i class="mdi mdi-account-plus"></i>
+                        </a>
+                        <input type="text" name="search_students" class="m-2 align-content-end border border-1 border-danger" placeholder="cari siswa...">
+                    </div>
                     <div class="table-responsive">
                         <table class="table " id="siswaTable">
                             <thead>
@@ -37,7 +40,7 @@
                                 <th scope="col">Detail</th>
                               </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tbody_students">
                                 @foreach ($siswa as $s)
                                     <tr >
                                         <th scope="row">{{ $loop->iteration }}</th>
@@ -49,7 +52,7 @@
                                             <div class="d-flex gap-1">
                                                 <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-primary" href="/dashboard/siswa/{{ $s->id }}">detail</a>
                                                 <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-secondary" href="/dashboard/siswa/{{ $s->id }}/edit">edit</a>
-                                                <button class="btn btn-sm btn-danger btn-delete" data-id="{{ $s->id }}">hapus</button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteStudent('{{ $s->id }}')">hapus</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -70,40 +73,60 @@
 
 @push('script')
    <script>
+        function deleteStudent(id) {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: 'Apakah Anda yakin ingin menghapus data ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/dashboard/siswa/' + id,
+                        type: 'DELETE',
+                        dataType: 'json',
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function (response) {
+                            Swal.fire('Sukses', response.message, 'success').then(function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (xhr) {
+                            Swal.fire('Error', 'Terjadi kesalahan saat menghapus data', 'error');
+                        }
+                    });
+                }
+            });
+        }
      $(document).ready(function () {
-            $('.btn-delete').click(function () {
-                var id = $(this).data('id');
-                console.log(id);
-
-                Swal.fire({
-                    title: 'Konfirmasi',
-                    text: 'Apakah Anda yakin ingin menghapus data ini?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya',
-                    cancelButtonText: 'Tidak'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '/dashboard/siswa/' + id,
-                            type: 'DELETE',
-                            dataType: 'json',
-                            data: {
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function (response) {
-                                Swal.fire('Sukses', response.message, 'success').then(function () {
-                                    location.reload();
-                                });
-                            },
-                            error: function (xhr) {
-                                Swal.fire('Error', 'Terjadi kesalahan saat menghapus data', 'error');
-                            }
-                        });
-                    }
-                });
+            $('input[name="search_students"]').on('change',  async function(event) {
+                const resultRequest = await fetch(`/dashboard/ajaxStudentReq?search_students=${this.value}`)
+                                        .then((result) => result.json());
+                const tbodyStudents = document.querySelector("#tbody_students");
+                const rowStudent = resultRequest.map((student, index) => {
+                    return ` <tr>
+                                <th scope="row">${index+1}</th>
+                                <td ><img src=" {{ asset('storage/${student.foto}') }}" alt="${student.nama}" class="" style="width: 100px; height: 100px;"></td>
+                                <td>${student.nama}</td>
+                                <td>${student.nis}</td>
+                                <td>${student.no_hp}</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-primary" href="/dashboard/siswa/${student.id}">detail</a>
+                                        <a class="text-decoration-none text-light btn btn-outline-warning btn-sm bg-secondary" href="/dashboard/siswa/${student.id}/edit">edit</a>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteStudent(${student.id})">hapus</button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                }).join('');
+                tbodyStudents.innerHTML = '';
+                tbodyStudents.innerHTML += rowStudent;
             });
         });
    </script>
